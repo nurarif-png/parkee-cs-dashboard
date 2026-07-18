@@ -647,6 +647,11 @@ canvas{display:block;width:100%!important;}
   </div>
   <div class="sl">Agent Performance</div>
   <div class="panel g1"><div class="panel-head"><div class="panel-title">Volume Tiket per Agent</div></div><div id="ct-agent"></div></div>
+  <div class="sl">Top Produk</div>
+  <div class="g2">
+    <div class="panel"><div class="panel-head"><div class="panel-title">💬 Top Produk Ditanyakan</div><div style="font-size:11px;color:var(--t3)">Seluruh tiket, non-komplain</div></div><div id="ct-produk-inquiry"></div></div>
+    <div class="panel"><div class="panel-head"><div class="panel-title">⚠️ Top Produk Dikomplain</div><div style="font-size:11px;color:var(--t3)">Berlabel "Komplain"</div></div><div id="ct-produk-komplain"></div></div>
+  </div>
   <div class="sl">Customer Inquiry Trends</div>
   <div class="panel g1" id="note-kategory-panel" style="display:none">
     <div class="panel-head">
@@ -1091,6 +1096,21 @@ function buildTiket(){
   const chC=cntBy(rows,2),chN={};Object.entries(chC).forEach(([k,v])=>{chN[ch[k]||'?']=v;});barRows(document.getElementById('ct-channel'),chN);
   const agC=cntBy(rows,4),agN={};Object.entries(agC).forEach(([k,v])=>{agN[(ag[k]||'?').split(' ').slice(0,2).join(' ')]=v;});barRows(document.getElementById('ct-agent'),agN,i=>CC[i%CC.length]);
   document.getElementById('fc-tiket').textContent=total<D.tiket.rows.length?'Filtered: '+N(total)+'/'+N(D.tiket.rows.length):'';
+  // Top Produk: ditanyakan (semua tiket) vs dikomplain — reactive to active filters
+  try{
+    var pr=D.tiket.produks||[];
+    var prodInqEl=document.getElementById('ct-produk-inquiry');
+    var prodKompEl=document.getElementById('ct-produk-komplain');
+    if(prodInqEl&&prodKompEl&&pr.length){
+      var inqC=cntBy(rows,5);
+      var inqSorted=Object.entries(inqC).map(function(e){return[pr[e[0]]||'?',e[1]];}).filter(function(e){return e[0]&&e[0]!=='Unknown';}).sort(function(a,b){return b[1]-a[1];}).slice(0,10);
+      prodInqEl.innerHTML=inqSorted.length?inqSorted.map(function(e,i){return'<div class="bar-row"><div class="bar-lbl sm" title="'+e[0]+'">'+e[0]+'</div><div class="bar-track"><div class="bar-fill" style="width:'+Math.round(e[1]/inqSorted[0][1]*100)+'%;background:'+CC[i%CC.length]+'"></div></div><div class="bar-val">'+N(e[1])+'</div></div>';}).join(''):'<div style="font-size:12px;color:var(--t3)">Tidak ada data</div>';
+      var kompRows=rows.filter(function(r){return r[3]===ki;});
+      var kompC=cntBy(kompRows,5);
+      var kompSorted=Object.entries(kompC).map(function(e){return[pr[e[0]]||'?',e[1]];}).filter(function(e){return e[0]&&e[0]!=='Unknown';}).sort(function(a,b){return b[1]-a[1];}).slice(0,10);
+      prodKompEl.innerHTML=kompSorted.length?kompSorted.map(function(e,i){return'<div class="bar-row"><div class="bar-lbl sm" title="'+e[0]+'">'+e[0]+'</div><div class="bar-track"><div class="bar-fill" style="width:'+Math.round(e[1]/kompSorted[0][1]*100)+'%;background:#dc2626"></div></div><div class="bar-val">'+N(e[1])+'</div></div>';}).join(''):'<div style="font-size:12px;color:var(--t3)">Tidak ada data</div>';
+    }
+  }catch(e){}
   // Note Kategory breakdown
   try{
     var nkSection=document.getElementById('note-kategory-panel');
