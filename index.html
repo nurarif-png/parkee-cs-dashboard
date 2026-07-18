@@ -1798,18 +1798,19 @@ async function sbFetch(path,opts){
 }
 async function sbLoadAll(table,order){
   if(table==='cs_tiket')return []; // Tiket: embedded already
-  // Komplain: load from Supabase
-  const rows=[];let from=0;const SIZE=2000;
+  const rows=[];let from=0;const SIZE=1000;
   const cols='id,year,month,location,category,sub_category,product,pic,channel,priority,status,issue';
+  const colStr=encodeURIComponent(cols);
   while(true){
     try{
-      const chunk=await sbFetch(table+'?select='+encodeURIComponent(cols)+'&order='+order+'&offset='+from+'&limit='+SIZE);
+      const chunk=await sbFetch(table+'?select='+colStr+'&order='+order+'&offset='+from+'&limit='+SIZE,{headers:{'Range-Unit':'items','Range':from+'-'+(from+SIZE-1)}});
       if(!chunk||chunk.length===0)break;
       rows.push.apply(rows,chunk);
       if(chunk.length<SIZE)break;
       from+=SIZE;
     }catch(e){console.warn('sbLoadAll',table,'page',from,':',e.message);break;}
   }
+  setSyncStatus('connected','☁ '+N(D.tiket.rows.length)+' tiket · '+N(rows.length)+' komplain');
   return rows;
 }
 function rebuildTiket(rows){
