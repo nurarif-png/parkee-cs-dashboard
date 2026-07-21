@@ -2005,7 +2005,6 @@ async function sbFetch(path,opts){
   if(res.status===204)return null;return res.json();
 }
 async function sbLoadAll(table,order){
-  if(table==='cs_tiket')return []; // Tiket: embedded already
   const rows=[];let from=0;const SIZE=1000;
   const cols='id,year,month,location,category,sub_category,product,pic,channel,priority,status,issue';
   const colStr=encodeURIComponent(cols);
