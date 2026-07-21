@@ -2006,7 +2006,9 @@ async function sbFetch(path,opts){
 }
 async function sbLoadAll(table,order){
   const rows=[];let from=0;const SIZE=1000;
-  const cols='id,year,month,location,category,sub_category,product,pic,channel,priority,status,issue';
+  const tiketCols='id,year,month,channel,label,agent,produk,note_kategory';
+  const komplainCols='id,year,month,location,category,sub_category,product,pic,channel,priority,status,issue';
+  const cols=table==='cs_tiket'?tiketCols:komplainCols;
   const colStr=encodeURIComponent(cols);
   while(true){
     try{
