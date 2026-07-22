@@ -1266,7 +1266,7 @@ function buildTiket(){
   const lc=cntBy(rows,3);
   dc('t3');charts['t3']=new Chart(document.getElementById('ct-label'),{type:'bar',data:{labels:Object.keys(lc).map(k=>lb[k]||'?'),datasets:[{data:Object.values(lc),backgroundColor:CC,borderRadius:5,borderSkipped:false}]},options:{indexAxis:'y',responsive:true,plugins:{legend:{display:false}},scales:{x:{grid:{color:'#f1f5f9'}},y:{grid:{display:false}}}}});
   const chC=cntBy(rows,2),chN={};Object.entries(chC).forEach(([k,v])=>{chN[ch[k]||'?']=v;});barRows(document.getElementById('ct-channel'),chN);
-  const agC=cntBy(rows,4),agN={};Object.entries(agC).forEach(([k,v])=>{agN[(ag[k]||'?').split(' ').slice(0,2).join(' ')]=v;});barRows(document.getElementById('ct-agent'),agN,i=>CC[i%CC.length]);
+  const agC=cntBy(rows,4),agN={};Object.entries(agC).forEach(([k,v])=>{var an=ag[k];if(!an||an==='Unknown'||an==='?')return;agN[an.split(' ').slice(0,2).join(' ')]=v;});barRows(document.getElementById('ct-agent'),agN,i=>CC[i%CC.length]);
   document.getElementById('fc-tiket').textContent=total<D.tiket.rows.length?'Filtered: '+N(total)+'/'+N(D.tiket.rows.length):'';
   // Top Produk: ditanyakan (semua tiket) vs dikomplain — reactive to active filters
   try{
