@@ -456,25 +456,6 @@ canvas{display:block;width:100%!important;}
 
 <!-- LOGIN -->
 <!-- PAGE: SETTINGS -->
-<div class="page" id="page-settings">
-  <div class="ph"><div class="ph-icon">⚙️</div><div><div class="ph-title" style="font-size:16px">Pengaturan Akun</div><div class="ph-sub">Kelola user & password — hanya untuk admin</div></div></div>
-  <div class="page-content" style="padding:0 20px 20px">
-    <div style="background:var(--white);border-radius:var(--r);box-shadow:var(--sh);padding:20px;max-width:700px">
-      <div style="font-size:13px;font-weight:700;color:var(--t1);margin-bottom:12px">👥 Daftar User</div>
-      <div id="settings-user-list" style="display:flex;flex-direction:column;gap:6px"></div>
-      <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
-        <div style="font-size:13px;font-weight:700;color:var(--t1);margin-bottom:10px">➕ Tambah User Baru</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;align-items:end">
-          <div class="fg"><label>Email</label><input id="su-email" placeholder="email@parkee.app"></div>
-          <div class="fg"><label>Password</label><input id="su-pass" type="password" placeholder="Min 6 karakter"></div>
-          <div class="fg"><label>Role</label><select id="su-role"><option value="viewer">👤 Viewer</option><option value="admin">👑 Admin</option></select></div>
-          <button class="btn btn-pri" onclick="addUser()" style="height:38px;white-space:nowrap">Tambah</button>
-        </div>
-        <div id="su-err" style="font-size:11px;color:var(--red);margin-top:6px;display:none"></div>
-      </div>
-    </div>
-  </div>
-</div>
 <div class="login-screen" id="login-screen">
   <!-- LEFT: Photo -->
   <div class="login-photo">
@@ -904,7 +885,26 @@ canvas{display:block;width:100%!important;}
 
     <!-- Column selector -->
     <div style="margin-bottom:16px">
-      <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Pilih Kolom</div>
+      <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter<div class="page" id="page-settings">
+  <div class="ph"><div class="ph-icon">⚙️</div><div><div class="ph-title" style="font-size:16px">Pengaturan Akun</div><div class="ph-sub">Kelola user & password — hanya untuk admin</div></div></div>
+  <div class="page-content" style="padding:0 20px 20px">
+    <div style="background:var(--white);border-radius:var(--r);box-shadow:var(--sh);padding:20px;max-width:700px">
+      <div style="font-size:13px;font-weight:700;color:var(--t1);margin-bottom:12px">👥 Daftar User</div>
+      <div id="settings-user-list" style="display:flex;flex-direction:column;gap:6px"></div>
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+        <div style="font-size:13px;font-weight:700;color:var(--t1);margin-bottom:10px">➕ Tambah User Baru</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;align-items:end">
+          <div class="fg"><label>Email</label><input id="su-email" placeholder="email@parkee.app"></div>
+          <div class="fg"><label>Password</label><input id="su-pass" type="password" placeholder="Min 6 karakter"></div>
+          <div class="fg"><label>Role</label><select id="su-role"><option value="viewer">👤 Viewer</option><option value="admin">👑 Admin</option></select></div>
+          <button class="btn btn-pri" onclick="addUser()" style="height:38px;white-space:nowrap">Tambah</button>
+        </div>
+        <div id="su-err" style="font-size:11px;color:var(--red);margin-top:6px;display:none"></div>
+      </div>
+    </div>
+  </div>
+</div>
+-spacing:.8px;margin-bottom:8px">Pilih Kolom</div>
       <div id="ex-col-list" style="display:flex;flex-wrap:wrap;gap:6px"></div>
       <div style="display:flex;gap:8px;margin-top:8px">
         <button class="btn btn-outline btn-sm" onclick="exSelectAll(true)">✓ Semua</button>
