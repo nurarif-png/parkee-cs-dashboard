@@ -2089,6 +2089,7 @@ async function loadFromSupabase(){
     if(t.length===0&&k.length===0){/* Data embedded, skip Supabase */setSyncStatus('connected','☁ '+N(D.tiket.rows.length)+' tiket');return false;}
     if(t.length>0){setSyncStatus('loading','🔄 Mengolah '+N(t.length)+' tiket...');rebuildTiket(t);}
     if(k.length>0){setSyncStatus('loading','🔄 Mengolah '+N(k.length)+' komplain...');rebuildKomplain(k);}
+    try{localStorage.setItem('cs_data',JSON.stringify({ts:Date.now(),tiketRows:D.tiket.rows,tiketChannels:D.tiket.channels,tiketLabels:D.tiket.labels,tiketAgents:D.tiket.agents,tiketProduks:D.tiket.produks,tiketNoteKats:D.tiket.note_kategoris,komplainDetail:D.komplain.detail,komplainRows:D.komplain.rows,komplainCats:D.komplain.categories,komplainProds:D.komplain.products,komplainPics:D.komplain.pics,komplainChs:D.komplain.channels,komplainPrios:D.komplain.priorities,komplainLocs:D.komplain.locations,komplainSubcats:D.komplain.subCategories}));}catch(e){}
     sbReady=true;setSyncStatus('connected','☁ '+N(D.tiket.rows.length)+' tiket · '+N(D.komplain.rows.length)+' komplain');
     return true;
   }catch(e){console.error(e);setSyncStatus('error','📋 Data lokal · '+e.message.slice(0,40));return false;}
@@ -2188,6 +2189,15 @@ async function initDashboard(){
     }
   })();
 
+  // Try loading cached Supabase data (instant, avoids full fetch)
+  try{
+    var cached=JSON.parse(localStorage.getItem('cs_data'));
+    if(cached&&cached.ts&&Date.now()-cached.ts<3600000){
+      D.tiket.rows=cached.tiketRows;D.tiket.channels=cached.tiketChannels||[];D.tiket.labels=cached.tiketLabels||[];D.tiket.agents=cached.tiketAgents||[];D.tiket.produks=cached.tiketProduks||[];D.tiket.note_kategoris=cached.tiketNoteKats||[];
+      D.komplain.detail=cached.komplainDetail||[];D.komplain.rows=cached.komplainRows||[];D.komplain.categories=cached.komplainCats||[];D.komplain.products=cached.komplainProds||[];D.komplain.pics=cached.komplainPics||[];D.komplain.channels=cached.komplainChs||[];D.komplain.priorities=cached.komplainPrios||[];D.komplain.locations=cached.komplainLocs||[];D.komplain.subCategories=cached.komplainSubcats||[];
+      sbReady=true;setSyncStatus('connected','☁ '+N(D.tiket.rows.length)+' tiket');
+    }
+  }catch(e){}
   // Set default "to" date to today
   var today=new Date().toISOString().slice(0,10);
   ['ft-date-to','fk-date-to','fr-date-to'].forEach(function(id){
