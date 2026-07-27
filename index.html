@@ -855,6 +855,49 @@ canvas{display:block;width:100%!important;}
   </div>
 </div>
 
+<div class="page" id="page-settings">
+  <div class="ph"><div class="ph-icon">⚙️</div><div><div class="ph-title" style="font-size:16px">Pengaturan Akun</div><div class="ph-sub">Kelola user & password — hanya untuk admin</div></div></div>
+  <div class="page-content" style="padding:0 20px 20px">
+    <div style="background:var(--white);border-radius:var(--r);box-shadow:var(--sh);padding:20px;max-width:700px">
+      <div style="font-size:13px;font-weight:700;color:var(--t1);margin-bottom:12px">👥 Daftar User</div>
+      <div id="settings-user-list" style="display:flex;flex-direction:column;gap:6px"></div>
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+        <div style="font-size:13px;font-weight:700;color:var(--t1);margin-bottom:10px">➕ Tambah User Baru</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;align-items:end">
+          <div class="fg"><label>Email</label><input id="su-email" placeholder="email@parkee.app"></div>
+          <div class="fg"><label>Password</label><input id="su-pass" type="password" placeholder="Min 6 karakter"></div>
+          <div class="fg"><label>Role</label><select id="su-role"><option value="viewer">👤 Viewer</option><option value="admin">👑 Admin</option></select></div>
+          <button class="btn btn-pri" onclick="addUser()" style="height:38px;white-space:nowrap">Tambah</button>
+        </div>
+        <div id="su-err" style="font-size:11px;color:var(--red);margin-top:6px;display:none"></div>
+      </div>
+    </div>
+  </div>
+</div>
+-spacing:.8px;margin-bottom:8px">Pilih Kolom</div>
+      <div id="ex-col-list" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn btn-outline btn-sm" onclick="exSelectAll(true)">✓ Semua</button>
+        <button class="btn btn-outline btn-sm" onclick="exSelectAll(false)">✕ Hapus</button>
+      </div>
+    </div>
+
+    <!-- Filename -->
+    <div class="form-grp" style="margin-bottom:18px">
+      <label class="form-lbl">Nama File</label>
+      <input class="form-inp" id="ex-filename" type="text" value="export.csv" style="font-family:'JetBrains Mono',monospace;font-size:12px">
+    </div>
+
+    <div class="form-actions">
+      <button class="btn btn-outline" onclick="closeOv('modal-export')">Batal</button>
+      <button class="btn btn-primary" onclick="doExportCSV()" id="ex-btn-dl">
+        📥 Download CSV
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: UPLOAD -->
 </div><!-- main-inner -->
 </main>
 
@@ -1318,50 +1361,869 @@ canvas{display:block;width:100%!important;}
     <div style="margin-bottom:16px">
       <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px">Pilih Kolom</div>
 
-  <div class="page" id="page-settings">
-  <div class="ph"><div class="ph-icon">⚙️</div><div><div class="ph-title" style="font-size:16px">Pengaturan Akun</div><div class="ph-sub">Kelola user & password — hanya untuk admin</div></div></div>
-  <div class="page-content" style="padding:0 20px 20px">
-    <div style="background:var(--white);border-radius:var(--r);box-shadow:var(--sh);padding:20px;max-width:700px">
-      <div style="font-size:13px;font-weight:700;color:var(--t1);margin-bottom:12px">👥 Daftar User</div>
-      <div id="settings-user-list" style="display:flex;flex-direction:column;gap:6px"></div>
-      <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
-        <div style="font-size:13px;font-weight:700;color:var(--t1);margin-bottom:10px">➕ Tambah User Baru</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;align-items:end">
-          <div class="fg"><label>Email</label><input id="su-email" placeholder="email@parkee.app"></div>
-          <div class="fg"><label>Password</label><input id="su-pass" type="password" placeholder="Min 6 karakter"></div>
-          <div class="fg"><label>Role</label><select id="su-role"><option value="viewer">👤 Viewer</option><option value="admin">👑 Admin</option></select></div>
-          <button class="btn btn-pri" onclick="addUser()" style="height:38px;white-space:nowrap">Tambah</button>
+  <div class="login-screen" id="login-screen">
+  <!-- LEFT: Photo -->
+  <div class="login-photo">
+    <div class="login-photo-overlay"></div>
+    <div class="login-photo-brand">
+      <div class="login-photo-brand-icon">🎧</div>
+      <div>
+        <div class="login-photo-brand-name">Parkee</div>
+        <div class="login-photo-brand-tag">CS MONITOR</div>
+      </div>
+    </div>
+    <div class="login-photo-text">
+      <div class="login-photo-title">Customer Success<br>Dashboard</div>
+      <div class="login-photo-sub">
+        Monitoring tiket, komplain &amp; rekonsiliasi dalam satu panel yang bersih dan cepat.
+      </div>
+      <div class="login-photo-badges">
+        <div class="login-photo-chip"><span>👥</span> Integrity</div>
+        <div class="login-photo-chip"><span>🛡️</span> Respect</div>
+        <div class="login-photo-chip"><span>📈</span> Excellence</div>
+      </div>
+    </div>
+    <div class="login-photo-badge">
+      <span class="dot"></span> Customer First · Service With Heart
+    </div>
+  </div>
+
+  <!-- RIGHT: Form -->
+  <div class="login-right">
+    <div class="login-card">
+      <div class="login-signin-pill"><span class="dot"></span> Secure Sign In</div>
+
+      <!-- Heading -->
+      <div style="margin-bottom:28px;">
+        <h1 style="font-size:26px;font-weight:800;color:#1e293b;letter-spacing:-.5px;margin-bottom:6px;">Selamat Datang</h1>
+        <p style="font-size:13px;color:#64748b;line-height:1.5;">Masuk untuk mengakses dashboard monitoring Customer Success Parkee.</p>
+      </div>
+
+      <!-- Email field -->
+      <div style="margin-bottom:16px;">
+        <label style="display:block;font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:7px;">Email</label>
+        <div style="position:relative;">
+          <div style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#94a3b8;font-size:15px;">✉</div>
+          <input id="li-email" type="email" placeholder="email@parkee.app"
+            style="width:100%;height:46px;padding:0 14px 0 40px;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:10px;color:#1e293b;font-size:13px;font-family:Inter,sans-serif;font-weight:500;outline:none;transition:border-color .15s,box-shadow .15s;pointer-events:auto;"
+            onfocus="this.style.borderColor='#2563eb';this.style.boxShadow='0 0 0 3px rgba(37,99,235,.1)'"
+            onblur="this.style.borderColor='#e2e8f0';this.style.boxShadow='none'"
+            onkeydown="if(event.key==='Enter')doLogin()">
         </div>
-        <div id="su-err" style="font-size:11px;color:var(--red);margin-top:6px;display:none"></div>
       </div>
-    </div>
-  </div>
-</div>
--spacing:.8px;margin-bottom:8px">Pilih Kolom</div>
-      <div id="ex-col-list" style="display:flex;flex-wrap:wrap;gap:6px"></div>
-      <div style="display:flex;gap:8px;margin-top:8px">
-        <button class="btn btn-outline btn-sm" onclick="exSelectAll(true)">✓ Semua</button>
-        <button class="btn btn-outline btn-sm" onclick="exSelectAll(false)">✕ Hapus</button>
+
+      <!-- Password field -->
+      <div style="margin-bottom:24px;">
+        <label style="display:block;font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:7px;">Password</label>
+        <div style="position:relative;">
+          <div style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#94a3b8;font-size:15px;">🔒</div>
+          <input id="li-pass" type="password" placeholder="••••••••••"
+            style="width:100%;height:46px;padding:0 14px 0 40px;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:10px;color:#1e293b;font-size:13px;font-family:Inter,sans-serif;font-weight:500;outline:none;transition:border-color .15s,box-shadow .15s;pointer-events:auto;"
+            onfocus="this.style.borderColor='#2563eb';this.style.boxShadow='0 0 0 3px rgba(37,99,235,.1)'"
+            onblur="this.style.borderColor='#e2e8f0';this.style.boxShadow='none'"
+            onkeydown="if(event.key==='Enter')doLogin()">
+        </div>
       </div>
-    </div>
 
-    <!-- Filename -->
-    <div class="form-grp" style="margin-bottom:18px">
-      <label class="form-lbl">Nama File</label>
-      <input class="form-inp" id="ex-filename" type="text" value="export.csv" style="font-family:'JetBrains Mono',monospace;font-size:12px">
-    </div>
+      <!-- Error -->
+      <div id="li-err" style="display:none;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:10px 14px;font-size:12px;font-weight:600;color:#dc2626;text-align:center;margin-bottom:16px;"></div>
 
-    <div class="form-actions">
-      <button class="btn btn-outline" onclick="closeOv('modal-export')">Batal</button>
-      <button class="btn btn-primary" onclick="doExportCSV()" id="ex-btn-dl">
-        📥 Download CSV
+      <!-- Button -->
+      <button id="li-btn"
+        style="width:100%;height:48px;background:linear-gradient(135deg,#2563eb,#16a34a);border:none;border-radius:10px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;transition:all .2s;box-shadow:0 4px 14px rgba(37,99,235,.3);letter-spacing:-.1px;pointer-events:auto;"
+        onmouseover="this.style.opacity='.9';this.style.transform='translateY(-1px)'"
+        onmouseout="this.style.opacity='1';this.style.transform='translateY(0)'"
+        onclick="doLogin()"
+        ontouchstart="doLogin()">
+        Masuk ke Dashboard →
       </button>
+
+      <!-- Footer -->
+      <div style="text-align:center;margin-top:24px;padding-top:20px;border-top:1px solid #f1f5f9;">
+        <div style="font-size:11px;color:#94a3b8;">Customer Success Team · Parkee</div>
+        <div style="font-size:10px;color:#cbd5e1;margin-top:4px;">Dashboard by <span style="color:#2563eb;font-weight:600;">Arif</span> · powered by Claude &amp; Nano</div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- MODAL: UPLOAD -->
-<div class="overlay" id="modal-upload">
+<div id="rt-toast"></div>
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeMobileSidebar()"></div>
+
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-icon">CS</div>
+    <div>
+      <div class="brand-name">Parkee CS</div>
+      <div class="brand-sub">Customer Success Monitor</div>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Dashboard</div>
+    <button class="nav-item active" onclick="showPage('tiket',this)" id="nav-tiket">
+      <span class="nav-icon">📋</span> Tiket
+      <span class="nav-ct" id="nc-tiket">–</span>
+    </button>
+    <button class="nav-item" onclick="showPage('komplain',this)" id="nav-komplain">
+      <span class="nav-icon">⚠️</span> Komplain
+      <span class="nav-ct" id="nc-komplain">–</span>
+    </button>
+    <button class="nav-item" onclick="showPage('recon',this)" id="nav-recon">
+      <span class="nav-icon">🔄</span> Rekonsiliasi
+      <span class="nav-ct" style="background:var(--amber-l);color:var(--amber)">GAP</span>
+    </button>
+    <div class="nav-section-label">Tools</div>
+    <button class="nav-item" onclick="openUpload()">
+      <span class="nav-icon">⬆</span> Upload CSV
+    </button>
+    <button class="nav-item" onclick="openExport()" id="btn-export">
+      <span class="nav-icon">📥</span> Export CSV
+    </button>
+    <button class="nav-item" onclick="downloadTemplate('tiket')">
+      <span class="nav-icon">⬇</span> Template Tiket
+    </button>
+    <button class="nav-item" onclick="downloadTemplate('komplain')">
+      <span class="nav-icon">⬇</span> Template Komplain
+    </button>
+    <button class="nav-item hidden-admin" onclick="showPage('settings',this)" id="nav-settings" style="margin-top:8px;border-top:1px solid var(--border);padding-top:12px">
+      <span class="nav-icon">⚙️</span> Pengaturan
+    </button>
+  </nav>
+  <div class="sidebar-bottom">
+    <div class="user-card" id="user-card" style="display:none">
+      <div class="user-avatar" id="user-avatar">–</div>
+      <div>
+        <div class="user-name" id="user-name">–</div>
+        <div class="user-role" id="user-role">–</div>
+      </div>
+    </div>
+    <button class="nav-item" onclick="doLogout()" style="color:var(--red);display:none" id="btn-logout">
+      <span class="nav-icon">⏻</span> Keluar
+    </button>
+    <div class="credit-bar">Dashboard by <b>Arif</b><br>powered by Claude &amp; Nano</div>
+  </div>
+</aside>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <button class="mobile-menu-btn" onclick="toggleMobileSidebar()" aria-label="Buka menu">☰</button>
+  <div class="topbar-title" id="topbar-title">📋 Tiket</div>
+  <div class="topbar-right">
+    <div id="last-update-badge" style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--t2);background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:5px 12px;white-space:nowrap">
+      <span style="font-size:12px">🗓</span>
+      <span id="last-update-text">–</span>
+    </div>
+    <div id="sync-status">⟳ Memuat...</div>
+  </div>
+</header>
+
+<!-- FILTER: TIKET -->
+<div class="subbar" id="fb-tiket">
+  <button class="sub-label-btn" onclick="toggleFilterExtra('ft-extra')">Filter <span id="ft-extra-arrow">▾</span></button>
+  <div class="date-range-group">
+    <span style="font-size:10px;color:var(--t3);font-weight:600;margin-right:2px">DARI</span>
+    <input class="date-inp" type="date" id="ft-date-from" onchange="applyFilters()" value="2024-01-01">
+    <span class="date-range-sep">→</span>
+    <input class="date-inp" type="date" id="ft-date-to" onchange="applyFilters()">
+  </div>
+  <div class="filter-extra" id="ft-extra">
+  <div class="fdiv"></div>
+  <select class="fsel" id="ft-channel" onchange="applyFilters()"><option value="">Semua Channel</option></select>
+  <select class="fsel" id="ft-label" onchange="applyFilters()"><option value="">Semua Label</option></select>
+  <select class="fsel" id="ft-agent" onchange="applyFilters()"><option value="">Semua Agent</option></select>
+  <select class="fsel" id="ft-produk" onchange="applyFilters()"><option value="">Semua Produk</option></select>
+  </div>
+  <button class="btn-reset" onclick="resetFilters('tiket')">✕ Reset</button>
+  <span class="sub-count" id="fc-tiket"></span>
+</div>
+
+<!-- FILTER: KOMPLAIN -->
+<div class="subbar hidden" id="fb-komplain">
+  <span class="sub-label">Filter</span>
+  <div class="date-range-group">
+    <span style="font-size:10px;color:var(--t3);font-weight:600;margin-right:2px">DARI</span>
+    <input class="date-inp" type="date" id="fk-date-from" onchange="applyFilters()" value="2024-01-01">
+    <span class="date-range-sep">→</span>
+    <input class="date-inp" type="date" id="fk-date-to" onchange="applyFilters()">
+  </div>
+  <div class="fdiv"></div>
+  <select class="fsel" id="fk-cat" onchange="applyFilters()"><option value="">Semua Kategori</option></select>
+  <select class="fsel" id="fk-subcat" onchange="kPage=1;applyFilters()"><option value="">Semua Sub Kategori</option></select>
+  <select class="fsel" id="fk-prod" onchange="applyFilters()"><option value="">Semua Produk</option></select>
+  <select class="fsel" id="fk-loc" onchange="applyFilters()"><option value="">Semua Lokasi</option></select>
+  <select class="fsel" id="fk-pic" onchange="applyFilters()"><option value="">Semua Issue Source</option></select>
+  <button class="btn-reset" onclick="resetFilters('komplain')">✕ Reset</button>
+  <span class="sub-count" id="fc-komplain"></span>
+</div>
+
+<!-- FILTER: RECON -->
+<div class="subbar hidden" id="fb-recon">
+  <span class="sub-label">Filter</span>
+  <div class="date-range-group">
+    <span style="font-size:10px;color:var(--t3);font-weight:600;margin-right:2px">DARI</span>
+    <input class="date-inp" type="date" id="fr-date-from" onchange="applyFilters()" value="2024-01-01">
+    <span class="date-range-sep">→</span>
+    <input class="date-inp" type="date" id="fr-date-to" onchange="applyFilters()">
+  </div>
+  <div class="fdiv"></div>
+  <select class="fsel" id="fr-status" onchange="applyFilters()">
+    <option value="">Semua Status</option>
+    <option value="good">🟢 Good (&lt;5%)</option>
+    <option value="warning">🟡 Warning (5–15%)</option>
+    <option value="critical">🔴 Critical (&gt;15%)</option>
+  </select>
+  <button class="btn-reset" onclick="resetFilters('recon')">✕ Reset</button>
+  <span class="sub-count" id="fc-recon"></span>
+</div>
+
+<!-- MAIN -->
+<main class="main">
+<div class="main-inner">
+
+<!-- PAGE: TIKET -->
+<div class="page active" id="page-tiket">
+  <div class="ph">
+    <div><div class="ph-title">📋 Tiket — Taptalk</div><div class="ph-sub">Data sistem Taptalk · Semua channel</div></div>
+    <span class="badge badge-blue">TAPTALK SYSTEM</span>
+  </div>
+  <div class="sl">Key Performance Indicators</div>
+  <div class="g5">
+    <div class="kpi" style="--kc:var(--blue);--ki:var(--blue-l)"><div class="kpi-accent"></div><div class="kpi-icon">📋</div><div class="kpi-label">Total Tiket</div><div class="kpi-val" id="t-total">–</div><div class="kpi-trend" id="t-total-trend"></div><div class="kpi-sub">Seluruh channel</div></div>
+    <div class="kpi" style="--kc:var(--red);--ki:var(--red-l)"><div class="kpi-accent"></div><div class="kpi-icon">⚠️</div><div class="kpi-label">Total Komplain</div><div class="kpi-val" id="t-komp">–</div><div class="kpi-trend" id="t-komp-trend"></div><div class="kpi-sub">Berlabel "Komplain"</div></div>
+    <div class="kpi" style="--kc:var(--green);--ki:var(--green-l)"><div class="kpi-accent"></div><div class="kpi-icon">✅</div><div class="kpi-label">Non-Komplain</div><div class="kpi-val" id="t-non">–</div><div class="kpi-trend" id="t-non-trend"></div><div class="kpi-sub">Inquiry, Spam, Request, BC</div></div>
+    <div class="kpi" style="--kc:var(--amber);--ki:var(--amber-l)"><div class="kpi-accent"></div><div class="kpi-icon">📊</div><div class="kpi-label">% Komplain</div><div class="kpi-val" id="t-pct">–</div><span class="kpi-badge" id="t-pct-badge"></span><div class="kpi-trend" id="t-pct-trend"></div><div class="kpi-sub">Rasio komplain dari total</div></div>
+    <div class="kpi" style="--kc:var(--teal);--ki:var(--teal-l)"><div class="kpi-accent"></div><div class="kpi-icon">🎯</div><div class="kpi-label">FCR Rate</div><div class="kpi-val" id="t-fcr">–</div><span class="kpi-badge" id="t-fcr-badge">–</span><div class="kpi-trend" id="t-fcr-trend"></div><div class="kpi-sub">Closed by CS (non-bot)</div></div>
+  </div>
+  <!-- DATA INFO ROW -->
+  <div id="tiket-data-info" style="display:flex;align-items:center;gap:8px;margin-bottom:16px;padding:10px 16px;background:var(--blue-l);border:1px solid var(--blue-m);border-radius:var(--rs)">
+    <span style="font-size:14px">🗓</span>
+    <div style="flex:1">
+      <div style="font-size:11px;font-weight:700;color:var(--blue)">Informasi Data Tiket</div>
+      <div style="font-size:11px;color:var(--t2)" id="tiket-info-text">Memuat...</div>
+    </div>
+    <div style="text-align:right;flex-shrink:0">
+      <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px">Last Update</div>
+      <div style="font-size:13px;font-weight:800;color:var(--blue);font-family:'JetBrains Mono',monospace" id="tiket-last-update">–</div>
+    </div>
+  </div>
+  <div class="sl">Year-over-Year</div>
+  <div class="panel g1">
+    <div class="panel-head">
+      <div class="panel-title">📈 Perbandingan Tiket per Bulan — Year-over-Year</div>
+      <div class="legend" id="tiket-yoy-legend"></div>
+    </div>
+    <canvas id="ct-yoy" height="170"></canvas>
+  </div>
+  <div class="sl">Tren Tiket</div>
+  <div class="g2">
+    <div class="panel"><div class="panel-head"><div class="panel-title">Tren Total Tiket per Bulan</div></div><canvas id="ct-trend" height="185"></canvas></div>
+    <div class="panel"><div class="panel-head"><div class="panel-title">Tren Komplain per Bulan</div></div><canvas id="ct-komplain" height="185"></canvas></div>
+  </div>
+  <div class="sl">Breakdown</div>
+  <div class="g3">
+    <div class="panel span2"><div class="panel-head"><div class="panel-title">Breakdown Case Label</div></div><canvas id="ct-label" height="145"></canvas></div>
+    <div class="panel"><div class="panel-head"><div class="panel-title">Channel Masuk</div></div><div id="ct-channel"></div></div>
+  </div>
+  <div class="sl">Agent Performance</div>
+  <div class="panel g1"><div class="panel-head"><div class="panel-title">Volume Tiket per Agent</div></div><div id="ct-agent"></div></div>
+  <div class="sl">Top Produk</div>
+  <div class="g2">
+    <div class="panel"><div class="panel-head"><div class="panel-title">💬 Top Produk Ditanyakan</div><div style="font-size:11px;color:var(--t3)">Seluruh tiket, non-komplain</div></div><div id="ct-produk-inquiry"></div></div>
+    <div class="panel"><div class="panel-head"><div class="panel-title">⚠️ Top Produk Dikomplain</div><div style="font-size:11px;color:var(--t3)">Berlabel "Komplain"</div></div><div id="ct-produk-komplain"></div></div>
+  </div>
+  <div class="sl">Customer Inquiry Trends</div>
+  <div class="g2">
+    <div class="panel"><div class="panel-head"><div class="panel-title">💬 Top Note Kategori — Inquiry</div><div style="font-size:11px;color:var(--t3)">Seluruh tiket, non-komplain</div></div><div id="ct-nk-inquiry"></div></div>
+    <div class="panel"><div class="panel-head"><div class="panel-title">⚠️ Top Note Kategori — Komplain</div><div style="font-size:11px;color:var(--t3)">Berlabel "Komplain"</div></div><div id="ct-nk-komplain"></div></div>
+  </div>
+  <div class="panel g1" id="note-kategory-panel" style="display:none">
+    <div class="panel-head">
+      <div class="panel-title" id="nk-title">📊 Top Note Kategory</div>
+      <div style="font-size:11px;color:var(--t3)" id="nk-subtitle">Pilih produk untuk melihat breakdown</div>
+    </div>
+    <div id="ct-note-kategory"></div>
+  </div>
+</div>
+
+<!-- PAGE: KOMPLAIN -->
+<div class="page" id="page-komplain">
+  <div class="ph">
+    <div><div class="ph-title">⚠️ Komplain — Input Manual CS</div><div class="ph-sub">Data pencatatan tim CS · Kategori, sub kategori, produk, lokasi, dan detail lengkap</div></div>
+    <span class="badge badge-green">CS MANUAL INPUT</span>
+  </div>
+  <div class="sl">Key Performance Indicators</div>
+  <div class="g4">
+    <div class="kpi" style="--kc:var(--blue);--ki:var(--blue-l)"><div class="kpi-accent"></div><div class="kpi-icon">📝</div><div class="kpi-label">Total Komplain Tercatat</div><div class="kpi-val" id="k-total">–</div><div class="kpi-sub">Input manual CS</div></div>
+    <div class="kpi" style="--kc:var(--green);--ki:var(--green-l)"><div class="kpi-accent"></div><div class="kpi-icon">📦</div><div class="kpi-label">Produk Paling Komplain</div><div class="kpi-val sm" id="k-prod">–</div><div class="kpi-sub" id="k-prod-ct">–</div></div>
+    <div class="kpi" style="--kc:var(--red);--ki:var(--red-l)"><div class="kpi-accent"></div><div class="kpi-icon">📍</div><div class="kpi-label">Lokasi Paling Komplain</div><div class="kpi-val sm" id="k-loc">–</div><div class="kpi-sub" id="k-loc-ct">–</div></div>
+    <div class="kpi" style="--kc:var(--amber);--ki:var(--amber-l)"><div class="kpi-accent"></div><div class="kpi-icon">📅</div><div class="kpi-label">Avg Komplain / Bulan</div><div class="kpi-val" id="k-avg">–</div><div class="kpi-sub" id="k-cats">– kategori aktif</div></div>
+  </div>
+  <!-- DATA INFO ROW -->
+  <div id="komplain-data-info" style="display:flex;align-items:center;gap:8px;margin-bottom:16px;padding:10px 16px;background:var(--green-l);border:1px solid var(--green-m);border-radius:var(--rs)">
+    <span style="font-size:14px">🗓</span>
+    <div style="flex:1">
+      <div style="font-size:11px;font-weight:700;color:var(--green)">Informasi Data Komplain</div>
+      <div style="font-size:11px;color:var(--t2)" id="komplain-info-text">Memuat...</div>
+    </div>
+    <div style="text-align:right;flex-shrink:0">
+      <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px">Last Update</div>
+      <div style="font-size:13px;font-weight:800;color:var(--green);font-family:'JetBrains Mono',monospace" id="komplain-last-update">–</div>
+    </div>
+  </div>
+  <div class="sl">Year-over-Year</div>
+  <div class="panel g1">
+    <div class="panel-head">
+      <div class="panel-title">📈 Perbandingan Komplain per Bulan — Year-over-Year</div>
+      <div class="legend" id="yoy-legend"></div>
+    </div>
+    <canvas id="ck-yoy" height="170"></canvas>
+  </div>
+  <div class="sl">Tren & Distribusi</div>
+  <div class="panel g1"><div class="panel-head"><div class="panel-title">Komplain Tercatat per Bulan</div></div><canvas id="ck-trend" height="150"></canvas></div>
+  <div class="g3">
+    <div class="panel span2"><div class="panel-head"><div class="panel-title">Top Kategori Komplain</div></div><div id="ck-cat"></div></div>
+    <div class="panel"><div class="panel-head"><div class="panel-title">Produk</div></div><canvas id="ck-prod" height="215"></canvas></div>
+  </div>
+  <div class="sl">Sub Kategori</div>
+  <div class="panel g1">
+    <div class="panel-head">
+      <div class="panel-title">Top Sub Kategori</div>
+      <select class="fsel" id="subcat-filter-cat" onchange="buildSubCatChart()" style="height:28px;font-size:11px">
+        <option value="">Semua Kategori</option>
+      </select>
+    </div>
+    <canvas id="ck-subcat" height="200"></canvas>
+  </div>
+  <div class="g3">
+    <div class="panel"><div class="panel-head"><div class="panel-title">🗺 Top 15 Lokasi</div></div><div id="ck-loc" style="max-height:280px;overflow-y:auto"></div></div>
+    <div class="panel"><div class="panel-head"><div class="panel-title">Issue Source</div></div><div id="ck-pic"></div></div>
+    <div class="panel"><div class="panel-head"><div class="panel-title">Priority Level</div></div><canvas id="ck-prio" height="195"></canvas></div>
+  </div>
+  <div class="sl">Data Komplain — Edit & Hapus</div>
+  <div class="panel g1">
+    <div class="panel-head">
+      <div class="panel-title">Tabel Komplain Detail</div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input class="tbl-search" id="tbl-search" type="text" placeholder="🔍 Cari lokasi, kategori..." oninput="kPage=1;renderKomplainTable()">
+        <div class="panel-meta" id="tbl-count"></div>
+      </div>
+    </div>
+    <div class="tbl-wrap">
+      <table><thead><tr><th>#</th><th>Tahun</th><th>Bulan</th><th>Lokasi</th><th>Kategori</th><th>Sub Kategori</th><th>Produk</th><th>Issue Source</th><th>Priority</th><th>Status</th><th>Aksi</th></tr></thead>
+      <tbody id="k-tbody"></tbody></table>
+    </div>
+    <div class="pagination" id="k-pg"></div>
+  </div>
+</div>
+
+<!-- PAGE: RECON -->
+<div class="page" id="page-recon">
+  <div class="ph">
+    <div><div class="ph-title">🔄 Rekonsiliasi — Gap Analysis</div><div class="ph-sub">Taptalk (expected) vs Input CS (recorded) · Identifikasi missing complaint per bulan</div></div>
+    <span class="badge badge-amber">GAP ANALYSIS</span>
+  </div>
+  <div class="sl">Summary Gap</div>
+  <div class="g4">
+    <div class="kpi" style="--kc:var(--blue);--ki:var(--blue-l)"><div class="kpi-accent"></div><div class="kpi-icon">📥</div><div class="kpi-label">Total Expected</div><div class="kpi-val" id="r-exp">–</div><div class="kpi-sub">Komplain dari Taptalk</div></div>
+    <div class="kpi" style="--kc:var(--green);--ki:var(--green-l)"><div class="kpi-accent"></div><div class="kpi-icon">✍️</div><div class="kpi-label">Total Recorded</div><div class="kpi-val" id="r-rec">–</div><div class="kpi-sub">Input manual CS</div></div>
+    <div class="kpi" style="--kc:var(--red);--ki:var(--red-l)"><div class="kpi-accent"></div><div class="kpi-icon">❌</div><div class="kpi-label">Total Missing</div><div class="kpi-val" id="r-miss">–</div><div class="kpi-sub">Belum terinput</div></div>
+    <div class="kpi" style="--kc:var(--amber);--ki:var(--amber-l)"><div class="kpi-accent"></div><div class="kpi-icon">📉</div><div class="kpi-label">Overall Gap %</div><div class="kpi-val" id="r-gpct">–</div><span class="kpi-badge" id="r-gbadge">–</span><div class="kpi-sub">Missing ÷ Expected</div></div>
+  </div>
+  <div class="sl">Status Indikator</div>
+  <div class="g3" style="margin-bottom:16px">
+    <div class="kpi" style="--kc:var(--green);--ki:var(--green-l)"><div class="kpi-accent"></div><div class="kpi-label">🟢 Good — Gap &lt;5%</div><div class="kpi-val" id="r-good">–</div><div class="kpi-sub">Input hampir sempurna</div></div>
+    <div class="kpi" style="--kc:var(--amber);--ki:var(--amber-l)"><div class="kpi-accent"></div><div class="kpi-label">🟡 Warning — 5–15%</div><div class="kpi-val" id="r-warn">–</div><div class="kpi-sub">Perlu diperhatikan</div></div>
+    <div class="kpi" style="--kc:var(--red);--ki:var(--red-l)"><div class="kpi-accent"></div><div class="kpi-label">🔴 Critical — &gt;15%</div><div class="kpi-val" id="r-crit">–</div><div class="kpi-sub">Banyak kelupaan input</div></div>
+  </div>
+  <div class="sl">Visualisasi</div>
+  <div class="panel g1">
+    <div class="panel-head">
+      <div class="panel-title">Monthly Reconciliation — Expected vs Recorded vs Missing</div>
+      <div class="legend">
+        <span class="legend-i"><span class="legend-dot" style="background:#2563eb"></span>Expected</span>
+        <span class="legend-i"><span class="legend-dot" style="background:#16a34a"></span>Recorded</span>
+        <span class="legend-i"><span class="legend-dot" style="background:#dc2626"></span>Missing</span>
+      </div>
+    </div>
+    <canvas id="cr-main" height="160"></canvas>
+  </div>
+  <div class="g2" style="margin-bottom:16px">
+    <div class="panel"><div class="panel-head"><div class="panel-title">Gap % Trend</div><div class="panel-meta">— 15% critical threshold</div></div><canvas id="cr-gap" height="200"></canvas></div>
+    <div class="panel"><div class="panel-head"><div class="panel-title">🌡️ Heatmap Gap</div></div><div id="cr-heatmap" style="overflow-x:auto"></div></div>
+  </div>
+  <div class="sl">Detail Tabel</div>
+  <div class="panel g1">
+    <div class="panel-head"><div class="panel-title">Tabel Gap per Bulan</div></div>
+    <div class="tbl-wrap"><table><thead><tr><th>Bulan</th><th>Komplain Taptalk</th><th>Input CS</th><th>Kelupaan</th><th>Gap %</th><th>Status</th></tr></thead><tbody id="r-tbody"></tbody></table></div>
+  </div>
+</div>
+
+</div><!-- main-inner -->
+</main>
+
+<!-- MODALS -->
+
+<!-- MODAL: EXPORT CSV -->
+<div class="overlay" id="modal-export">
+  <div class="modal" style="max-width:560px">
+    <button class="modal-close" onclick="closeOv('modal-export')">&#x2715;</button>
+    <div class="modal-title">📥 Export Data CSV</div>
+    <div class="modal-sub">Download data sesuai filter yang aktif saat ini.</div>
+
+    <!-- Dataset selector tabs -->
+    <div class="upload-tabs" id="ex-tabs">
+      <button class="utab active" id="ex-tab-tiket" onclick="setExportType('tiket',this)">📋 Tiket</button>
+      <button class="utab" id="ex-tab-komplain" onclick="setExportType('komplain',this)">⚠️ Komplain</button>
+      <button class="utab" id="ex-tab-recon" onclick="setExportType('recon',this)">🔄 Rekonsiliasi</button>
+    </div>
+
+    <!-- Active filters preview -->
+    <div id="ex-filter-info" style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:11px;color:var(--t2);line-height:1.8"></div>
+
+    <!-- Row count badge -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div style="font-size:12px;color:var(--t2)">Jumlah baris yang akan di-export:</div>
+      <div id="ex-row-count" style="font-size:18px;font-weight:800;color:var(--blue);font-family:'JetBrains Mono',monospace">–</div>
+    </div>
+
+    <!-- Column selector -->
+    <div style="margin-bottom:16px">
+      <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px">Pilih Kolom</div>
+
+  <div class="login-screen" id="login-screen">
+  <!-- LEFT: Photo -->
+  <div class="login-photo">
+    <div class="login-photo-overlay"></div>
+    <div class="login-photo-brand">
+      <div class="login-photo-brand-icon">🎧</div>
+      <div>
+        <div class="login-photo-brand-name">Parkee</div>
+        <div class="login-photo-brand-tag">CS MONITOR</div>
+      </div>
+    </div>
+    <div class="login-photo-text">
+      <div class="login-photo-title">Customer Success<br>Dashboard</div>
+      <div class="login-photo-sub">
+        Monitoring tiket, komplain &amp; rekonsiliasi dalam satu panel yang bersih dan cepat.
+      </div>
+      <div class="login-photo-badges">
+        <div class="login-photo-chip"><span>👥</span> Integrity</div>
+        <div class="login-photo-chip"><span>🛡️</span> Respect</div>
+        <div class="login-photo-chip"><span>📈</span> Excellence</div>
+      </div>
+    </div>
+    <div class="login-photo-badge">
+      <span class="dot"></span> Customer First · Service With Heart
+    </div>
+  </div>
+
+  <!-- RIGHT: Form -->
+  <div class="login-right">
+    <div class="login-card">
+      <div class="login-signin-pill"><span class="dot"></span> Secure Sign In</div>
+
+      <!-- Heading -->
+      <div style="margin-bottom:28px;">
+        <h1 style="font-size:26px;font-weight:800;color:#1e293b;letter-spacing:-.5px;margin-bottom:6px;">Selamat Datang</h1>
+        <p style="font-size:13px;color:#64748b;line-height:1.5;">Masuk untuk mengakses dashboard monitoring Customer Success Parkee.</p>
+      </div>
+
+      <!-- Email field -->
+      <div style="margin-bottom:16px;">
+        <label style="display:block;font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:7px;">Email</label>
+        <div style="position:relative;">
+          <div style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#94a3b8;font-size:15px;">✉</div>
+          <input id="li-email" type="email" placeholder="email@parkee.app"
+            style="width:100%;height:46px;padding:0 14px 0 40px;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:10px;color:#1e293b;font-size:13px;font-family:Inter,sans-serif;font-weight:500;outline:none;transition:border-color .15s,box-shadow .15s;pointer-events:auto;"
+            onfocus="this.style.borderColor='#2563eb';this.style.boxShadow='0 0 0 3px rgba(37,99,235,.1)'"
+            onblur="this.style.borderColor='#e2e8f0';this.style.boxShadow='none'"
+            onkeydown="if(event.key==='Enter')doLogin()">
+        </div>
+      </div>
+
+      <!-- Password field -->
+      <div style="margin-bottom:24px;">
+        <label style="display:block;font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:7px;">Password</label>
+        <div style="position:relative;">
+          <div style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#94a3b8;font-size:15px;">🔒</div>
+          <input id="li-pass" type="password" placeholder="••••••••••"
+            style="width:100%;height:46px;padding:0 14px 0 40px;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:10px;color:#1e293b;font-size:13px;font-family:Inter,sans-serif;font-weight:500;outline:none;transition:border-color .15s,box-shadow .15s;pointer-events:auto;"
+            onfocus="this.style.borderColor='#2563eb';this.style.boxShadow='0 0 0 3px rgba(37,99,235,.1)'"
+            onblur="this.style.borderColor='#e2e8f0';this.style.boxShadow='none'"
+            onkeydown="if(event.key==='Enter')doLogin()">
+        </div>
+      </div>
+
+      <!-- Error -->
+      <div id="li-err" style="display:none;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:10px 14px;font-size:12px;font-weight:600;color:#dc2626;text-align:center;margin-bottom:16px;"></div>
+
+      <!-- Button -->
+      <button id="li-btn"
+        style="width:100%;height:48px;background:linear-gradient(135deg,#2563eb,#16a34a);border:none;border-radius:10px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;transition:all .2s;box-shadow:0 4px 14px rgba(37,99,235,.3);letter-spacing:-.1px;pointer-events:auto;"
+        onmouseover="this.style.opacity='.9';this.style.transform='translateY(-1px)'"
+        onmouseout="this.style.opacity='1';this.style.transform='translateY(0)'"
+        onclick="doLogin()"
+        ontouchstart="doLogin()">
+        Masuk ke Dashboard →
+      </button>
+
+      <!-- Footer -->
+      <div style="text-align:center;margin-top:24px;padding-top:20px;border-top:1px solid #f1f5f9;">
+        <div style="font-size:11px;color:#94a3b8;">Customer Success Team · Parkee</div>
+        <div style="font-size:10px;color:#cbd5e1;margin-top:4px;">Dashboard by <span style="color:#2563eb;font-weight:600;">Arif</span> · powered by Claude &amp; Nano</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="rt-toast"></div>
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeMobileSidebar()"></div>
+
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-icon">CS</div>
+    <div>
+      <div class="brand-name">Parkee CS</div>
+      <div class="brand-sub">Customer Success Monitor</div>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Dashboard</div>
+    <button class="nav-item active" onclick="showPage('tiket',this)" id="nav-tiket">
+      <span class="nav-icon">📋</span> Tiket
+      <span class="nav-ct" id="nc-tiket">–</span>
+    </button>
+    <button class="nav-item" onclick="showPage('komplain',this)" id="nav-komplain">
+      <span class="nav-icon">⚠️</span> Komplain
+      <span class="nav-ct" id="nc-komplain">–</span>
+    </button>
+    <button class="nav-item" onclick="showPage('recon',this)" id="nav-recon">
+      <span class="nav-icon">🔄</span> Rekonsiliasi
+      <span class="nav-ct" style="background:var(--amber-l);color:var(--amber)">GAP</span>
+    </button>
+    <div class="nav-section-label">Tools</div>
+    <button class="nav-item" onclick="openUpload()">
+      <span class="nav-icon">⬆</span> Upload CSV
+    </button>
+    <button class="nav-item" onclick="openExport()" id="btn-export">
+      <span class="nav-icon">📥</span> Export CSV
+    </button>
+    <button class="nav-item" onclick="downloadTemplate('tiket')">
+      <span class="nav-icon">⬇</span> Template Tiket
+    </button>
+    <button class="nav-item" onclick="downloadTemplate('komplain')">
+      <span class="nav-icon">⬇</span> Template Komplain
+    </button>
+    <button class="nav-item hidden-admin" onclick="showPage('settings',this)" id="nav-settings" style="margin-top:8px;border-top:1px solid var(--border);padding-top:12px">
+      <span class="nav-icon">⚙️</span> Pengaturan
+    </button>
+  </nav>
+  <div class="sidebar-bottom">
+    <div class="user-card" id="user-card" style="display:none">
+      <div class="user-avatar" id="user-avatar">–</div>
+      <div>
+        <div class="user-name" id="user-name">–</div>
+        <div class="user-role" id="user-role">–</div>
+      </div>
+    </div>
+    <button class="nav-item" onclick="doLogout()" style="color:var(--red);display:none" id="btn-logout">
+      <span class="nav-icon">⏻</span> Keluar
+    </button>
+    <div class="credit-bar">Dashboard by <b>Arif</b><br>powered by Claude &amp; Nano</div>
+  </div>
+</aside>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <button class="mobile-menu-btn" onclick="toggleMobileSidebar()" aria-label="Buka menu">☰</button>
+  <div class="topbar-title" id="topbar-title">📋 Tiket</div>
+  <div class="topbar-right">
+    <div id="last-update-badge" style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--t2);background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:5px 12px;white-space:nowrap">
+      <span style="font-size:12px">🗓</span>
+      <span id="last-update-text">–</span>
+    </div>
+    <div id="sync-status">⟳ Memuat...</div>
+  </div>
+</header>
+
+<!-- FILTER: TIKET -->
+<div class="subbar" id="fb-tiket">
+  <button class="sub-label-btn" onclick="toggleFilterExtra('ft-extra')">Filter <span id="ft-extra-arrow">▾</span></button>
+  <div class="date-range-group">
+    <span style="font-size:10px;color:var(--t3);font-weight:600;margin-right:2px">DARI</span>
+    <input class="date-inp" type="date" id="ft-date-from" onchange="applyFilters()" value="2024-01-01">
+    <span class="date-range-sep">→</span>
+    <input class="date-inp" type="date" id="ft-date-to" onchange="applyFilters()">
+  </div>
+  <div class="filter-extra" id="ft-extra">
+  <div class="fdiv"></div>
+  <select class="fsel" id="ft-channel" onchange="applyFilters()"><option value="">Semua Channel</option></select>
+  <select class="fsel" id="ft-label" onchange="applyFilters()"><option value="">Semua Label</option></select>
+  <select class="fsel" id="ft-agent" onchange="applyFilters()"><option value="">Semua Agent</option></select>
+  <select class="fsel" id="ft-produk" onchange="applyFilters()"><option value="">Semua Produk</option></select>
+  </div>
+  <button class="btn-reset" onclick="resetFilters('tiket')">✕ Reset</button>
+  <span class="sub-count" id="fc-tiket"></span>
+</div>
+
+<!-- FILTER: KOMPLAIN -->
+<div class="subbar hidden" id="fb-komplain">
+  <span class="sub-label">Filter</span>
+  <div class="date-range-group">
+    <span style="font-size:10px;color:var(--t3);font-weight:600;margin-right:2px">DARI</span>
+    <input class="date-inp" type="date" id="fk-date-from" onchange="applyFilters()" value="2024-01-01">
+    <span class="date-range-sep">→</span>
+    <input class="date-inp" type="date" id="fk-date-to" onchange="applyFilters()">
+  </div>
+  <div class="fdiv"></div>
+  <select class="fsel" id="fk-cat" onchange="applyFilters()"><option value="">Semua Kategori</option></select>
+  <select class="fsel" id="fk-subcat" onchange="kPage=1;applyFilters()"><option value="">Semua Sub Kategori</option></select>
+  <select class="fsel" id="fk-prod" onchange="applyFilters()"><option value="">Semua Produk</option></select>
+  <select class="fsel" id="fk-loc" onchange="applyFilters()"><option value="">Semua Lokasi</option></select>
+  <select class="fsel" id="fk-pic" onchange="applyFilters()"><option value="">Semua Issue Source</option></select>
+  <button class="btn-reset" onclick="resetFilters('komplain')">✕ Reset</button>
+  <span class="sub-count" id="fc-komplain"></span>
+</div>
+
+<!-- FILTER: RECON -->
+<div class="subbar hidden" id="fb-recon">
+  <span class="sub-label">Filter</span>
+  <div class="date-range-group">
+    <span style="font-size:10px;color:var(--t3);font-weight:600;margin-right:2px">DARI</span>
+    <input class="date-inp" type="date" id="fr-date-from" onchange="applyFilters()" value="2024-01-01">
+    <span class="date-range-sep">→</span>
+    <input class="date-inp" type="date" id="fr-date-to" onchange="applyFilters()">
+  </div>
+  <div class="fdiv"></div>
+  <select class="fsel" id="fr-status" onchange="applyFilters()">
+    <option value="">Semua Status</option>
+    <option value="good">🟢 Good (&lt;5%)</option>
+    <option value="warning">🟡 Warning (5–15%)</option>
+    <option value="critical">🔴 Critical (&gt;15%)</option>
+  </select>
+  <button class="btn-reset" onclick="resetFilters('recon')">✕ Reset</button>
+  <span class="sub-count" id="fc-recon"></span>
+</div>
+
+<!-- MAIN -->
+<main class="main">
+<div class="main-inner">
+
+<!-- PAGE: TIKET -->
+<div class="page active" id="page-tiket">
+  <div class="ph">
+    <div><div class="ph-title">📋 Tiket — Taptalk</div><div class="ph-sub">Data sistem Taptalk · Semua channel</div></div>
+    <span class="badge badge-blue">TAPTALK SYSTEM</span>
+  </div>
+  <div class="sl">Key Performance Indicators</div>
+  <div class="g5">
+    <div class="kpi" style="--kc:var(--blue);--ki:var(--blue-l)"><div class="kpi-accent"></div><div class="kpi-icon">📋</div><div class="kpi-label">Total Tiket</div><div class="kpi-val" id="t-total">–</div><div class="kpi-trend" id="t-total-trend"></div><div class="kpi-sub">Seluruh channel</div></div>
+    <div class="kpi" style="--kc:var(--red);--ki:var(--red-l)"><div class="kpi-accent"></div><div class="kpi-icon">⚠️</div><div class="kpi-label">Total Komplain</div><div class="kpi-val" id="t-komp">–</div><div class="kpi-trend" id="t-komp-trend"></div><div class="kpi-sub">Berlabel "Komplain"</div></div>
+    <div class="kpi" style="--kc:var(--green);--ki:var(--green-l)"><div class="kpi-accent"></div><div class="kpi-icon">✅</div><div class="kpi-label">Non-Komplain</div><div class="kpi-val" id="t-non">–</div><div class="kpi-trend" id="t-non-trend"></div><div class="kpi-sub">Inquiry, Spam, Request, BC</div></div>
+    <div class="kpi" style="--kc:var(--amber);--ki:var(--amber-l)"><div class="kpi-accent"></div><div class="kpi-icon">📊</div><div class="kpi-label">% Komplain</div><div class="kpi-val" id="t-pct">–</div><span class="kpi-badge" id="t-pct-badge"></span><div class="kpi-trend" id="t-pct-trend"></div><div class="kpi-sub">Rasio komplain dari total</div></div>
+    <div class="kpi" style="--kc:var(--teal);--ki:var(--teal-l)"><div class="kpi-accent"></div><div class="kpi-icon">🎯</div><div class="kpi-label">FCR Rate</div><div class="kpi-val" id="t-fcr">–</div><span class="kpi-badge" id="t-fcr-badge">–</span><div class="kpi-trend" id="t-fcr-trend"></div><div class="kpi-sub">Closed by CS (non-bot)</div></div>
+  </div>
+  <!-- DATA INFO ROW -->
+  <div id="tiket-data-info" style="display:flex;align-items:center;gap:8px;margin-bottom:16px;padding:10px 16px;background:var(--blue-l);border:1px solid var(--blue-m);border-radius:var(--rs)">
+    <span style="font-size:14px">🗓</span>
+    <div style="flex:1">
+      <div style="font-size:11px;font-weight:700;color:var(--blue)">Informasi Data Tiket</div>
+      <div style="font-size:11px;color:var(--t2)" id="tiket-info-text">Memuat...</div>
+    </div>
+    <div style="text-align:right;flex-shrink:0">
+      <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px">Last Update</div>
+      <div style="font-size:13px;font-weight:800;color:var(--blue);font-family:'JetBrains Mono',monospace" id="tiket-last-update">–</div>
+    </div>
+  </div>
+  <div class="sl">Year-over-Year</div>
+  <div class="panel g1">
+    <div class="panel-head">
+      <div class="panel-title">📈 Perbandingan Tiket per Bulan — Year-over-Year</div>
+      <div class="legend" id="tiket-yoy-legend"></div>
+    </div>
+    <canvas id="ct-yoy" height="170"></canvas>
+  </div>
+  <div class="sl">Tren Tiket</div>
+  <div class="g2">
+    <div class="panel"><div class="panel-head"><div class="panel-title">Tren Total Tiket per Bulan</div></div><canvas id="ct-trend" height="185"></canvas></div>
+    <div class="panel"><div class="panel-head"><div class="panel-title">Tren Komplain per Bulan</div></div><canvas id="ct-komplain" height="185"></canvas></div>
+  </div>
+  <div class="sl">Breakdown</div>
+  <div class="g3">
+    <div class="panel span2"><div class="panel-head"><div class="panel-title">Breakdown Case Label</div></div><canvas id="ct-label" height="145"></canvas></div>
+    <div class="panel"><div class="panel-head"><div class="panel-title">Channel Masuk</div></div><div id="ct-channel"></div></div>
+  </div>
+  <div class="sl">Agent Performance</div>
+  <div class="panel g1"><div class="panel-head"><div class="panel-title">Volume Tiket per Agent</div></div><div id="ct-agent"></div></div>
+  <div class="sl">Top Produk</div>
+  <div class="g2">
+    <div class="panel"><div class="panel-head"><div class="panel-title">💬 Top Produk Ditanyakan</div><div style="font-size:11px;color:var(--t3)">Seluruh tiket, non-komplain</div></div><div id="ct-produk-inquiry"></div></div>
+    <div class="panel"><div class="panel-head"><div class="panel-title">⚠️ Top Produk Dikomplain</div><div style="font-size:11px;color:var(--t3)">Berlabel "Komplain"</div></div><div id="ct-produk-komplain"></div></div>
+  </div>
+  <div class="sl">Customer Inquiry Trends</div>
+  <div class="g2">
+    <div class="panel"><div class="panel-head"><div class="panel-title">💬 Top Note Kategori — Inquiry</div><div style="font-size:11px;color:var(--t3)">Seluruh tiket, non-komplain</div></div><div id="ct-nk-inquiry"></div></div>
+    <div class="panel"><div class="panel-head"><div class="panel-title">⚠️ Top Note Kategori — Komplain</div><div style="font-size:11px;color:var(--t3)">Berlabel "Komplain"</div></div><div id="ct-nk-komplain"></div></div>
+  </div>
+  <div class="panel g1" id="note-kategory-panel" style="display:none">
+    <div class="panel-head">
+      <div class="panel-title" id="nk-title">📊 Top Note Kategory</div>
+      <div style="font-size:11px;color:var(--t3)" id="nk-subtitle">Pilih produk untuk melihat breakdown</div>
+    </div>
+    <div id="ct-note-kategory"></div>
+  </div>
+</div>
+
+<!-- PAGE: KOMPLAIN -->
+<div class="page" id="page-komplain">
+  <div class="ph">
+    <div><div class="ph-title">⚠️ Komplain — Input Manual CS</div><div class="ph-sub">Data pencatatan tim CS · Kategori, sub kategori, produk, lokasi, dan detail lengkap</div></div>
+    <span class="badge badge-green">CS MANUAL INPUT</span>
+  </div>
+  <div class="sl">Key Performance Indicators</div>
+  <div class="g4">
+    <div class="kpi" style="--kc:var(--blue);--ki:var(--blue-l)"><div class="kpi-accent"></div><div class="kpi-icon">📝</div><div class="kpi-label">Total Komplain Tercatat</div><div class="kpi-val" id="k-total">–</div><div class="kpi-sub">Input manual CS</div></div>
+    <div class="kpi" style="--kc:var(--green);--ki:var(--green-l)"><div class="kpi-accent"></div><div class="kpi-icon">📦</div><div class="kpi-label">Produk Paling Komplain</div><div class="kpi-val sm" id="k-prod">–</div><div class="kpi-sub" id="k-prod-ct">–</div></div>
+    <div class="kpi" style="--kc:var(--red);--ki:var(--red-l)"><div class="kpi-accent"></div><div class="kpi-icon">📍</div><div class="kpi-label">Lokasi Paling Komplain</div><div class="kpi-val sm" id="k-loc">–</div><div class="kpi-sub" id="k-loc-ct">–</div></div>
+    <div class="kpi" style="--kc:var(--amber);--ki:var(--amber-l)"><div class="kpi-accent"></div><div class="kpi-icon">📅</div><div class="kpi-label">Avg Komplain / Bulan</div><div class="kpi-val" id="k-avg">–</div><div class="kpi-sub" id="k-cats">– kategori aktif</div></div>
+  </div>
+  <!-- DATA INFO ROW -->
+  <div id="komplain-data-info" style="display:flex;align-items:center;gap:8px;margin-bottom:16px;padding:10px 16px;background:var(--green-l);border:1px solid var(--green-m);border-radius:var(--rs)">
+    <span style="font-size:14px">🗓</span>
+    <div style="flex:1">
+      <div style="font-size:11px;font-weight:700;color:var(--green)">Informasi Data Komplain</div>
+      <div style="font-size:11px;color:var(--t2)" id="komplain-info-text">Memuat...</div>
+    </div>
+    <div style="text-align:right;flex-shrink:0">
+      <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px">Last Update</div>
+      <div style="font-size:13px;font-weight:800;color:var(--green);font-family:'JetBrains Mono',monospace" id="komplain-last-update">–</div>
+    </div>
+  </div>
+  <div class="sl">Year-over-Year</div>
+  <div class="panel g1">
+    <div class="panel-head">
+      <div class="panel-title">📈 Perbandingan Komplain per Bulan — Year-over-Year</div>
+      <div class="legend" id="yoy-legend"></div>
+    </div>
+    <canvas id="ck-yoy" height="170"></canvas>
+  </div>
+  <div class="sl">Tren & Distribusi</div>
+  <div class="panel g1"><div class="panel-head"><div class="panel-title">Komplain Tercatat per Bulan</div></div><canvas id="ck-trend" height="150"></canvas></div>
+  <div class="g3">
+    <div class="panel span2"><div class="panel-head"><div class="panel-title">Top Kategori Komplain</div></div><div id="ck-cat"></div></div>
+    <div class="panel"><div class="panel-head"><div class="panel-title">Produk</div></div><canvas id="ck-prod" height="215"></canvas></div>
+  </div>
+  <div class="sl">Sub Kategori</div>
+  <div class="panel g1">
+    <div class="panel-head">
+      <div class="panel-title">Top Sub Kategori</div>
+      <select class="fsel" id="subcat-filter-cat" onchange="buildSubCatChart()" style="height:28px;font-size:11px">
+        <option value="">Semua Kategori</option>
+      </select>
+    </div>
+    <canvas id="ck-subcat" height="200"></canvas>
+  </div>
+  <div class="g3">
+    <div class="panel"><div class="panel-head"><div class="panel-title">🗺 Top 15 Lokasi</div></div><div id="ck-loc" style="max-height:280px;overflow-y:auto"></div></div>
+    <div class="panel"><div class="panel-head"><div class="panel-title">Issue Source</div></div><div id="ck-pic"></div></div>
+    <div class="panel"><div class="panel-head"><div class="panel-title">Priority Level</div></div><canvas id="ck-prio" height="195"></canvas></div>
+  </div>
+  <div class="sl">Data Komplain — Edit & Hapus</div>
+  <div class="panel g1">
+    <div class="panel-head">
+      <div class="panel-title">Tabel Komplain Detail</div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input class="tbl-search" id="tbl-search" type="text" placeholder="🔍 Cari lokasi, kategori..." oninput="kPage=1;renderKomplainTable()">
+        <div class="panel-meta" id="tbl-count"></div>
+      </div>
+    </div>
+    <div class="tbl-wrap">
+      <table><thead><tr><th>#</th><th>Tahun</th><th>Bulan</th><th>Lokasi</th><th>Kategori</th><th>Sub Kategori</th><th>Produk</th><th>Issue Source</th><th>Priority</th><th>Status</th><th>Aksi</th></tr></thead>
+      <tbody id="k-tbody"></tbody></table>
+    </div>
+    <div class="pagination" id="k-pg"></div>
+  </div>
+</div>
+
+<!-- PAGE: RECON -->
+<div class="page" id="page-recon">
+  <div class="ph">
+    <div><div class="ph-title">🔄 Rekonsiliasi — Gap Analysis</div><div class="ph-sub">Taptalk (expected) vs Input CS (recorded) · Identifikasi missing complaint per bulan</div></div>
+    <span class="badge badge-amber">GAP ANALYSIS</span>
+  </div>
+  <div class="sl">Summary Gap</div>
+  <div class="g4">
+    <div class="kpi" style="--kc:var(--blue);--ki:var(--blue-l)"><div class="kpi-accent"></div><div class="kpi-icon">📥</div><div class="kpi-label">Total Expected</div><div class="kpi-val" id="r-exp">–</div><div class="kpi-sub">Komplain dari Taptalk</div></div>
+    <div class="kpi" style="--kc:var(--green);--ki:var(--green-l)"><div class="kpi-accent"></div><div class="kpi-icon">✍️</div><div class="kpi-label">Total Recorded</div><div class="kpi-val" id="r-rec">–</div><div class="kpi-sub">Input manual CS</div></div>
+    <div class="kpi" style="--kc:var(--red);--ki:var(--red-l)"><div class="kpi-accent"></div><div class="kpi-icon">❌</div><div class="kpi-label">Total Missing</div><div class="kpi-val" id="r-miss">–</div><div class="kpi-sub">Belum terinput</div></div>
+    <div class="kpi" style="--kc:var(--amber);--ki:var(--amber-l)"><div class="kpi-accent"></div><div class="kpi-icon">📉</div><div class="kpi-label">Overall Gap %</div><div class="kpi-val" id="r-gpct">–</div><span class="kpi-badge" id="r-gbadge">–</span><div class="kpi-sub">Missing ÷ Expected</div></div>
+  </div>
+  <div class="sl">Status Indikator</div>
+  <div class="g3" style="margin-bottom:16px">
+    <div class="kpi" style="--kc:var(--green);--ki:var(--green-l)"><div class="kpi-accent"></div><div class="kpi-label">🟢 Good — Gap &lt;5%</div><div class="kpi-val" id="r-good">–</div><div class="kpi-sub">Input hampir sempurna</div></div>
+    <div class="kpi" style="--kc:var(--amber);--ki:var(--amber-l)"><div class="kpi-accent"></div><div class="kpi-label">🟡 Warning — 5–15%</div><div class="kpi-val" id="r-warn">–</div><div class="kpi-sub">Perlu diperhatikan</div></div>
+    <div class="kpi" style="--kc:var(--red);--ki:var(--red-l)"><div class="kpi-accent"></div><div class="kpi-label">🔴 Critical — &gt;15%</div><div class="kpi-val" id="r-crit">–</div><div class="kpi-sub">Banyak kelupaan input</div></div>
+  </div>
+  <div class="sl">Visualisasi</div>
+  <div class="panel g1">
+    <div class="panel-head">
+      <div class="panel-title">Monthly Reconciliation — Expected vs Recorded vs Missing</div>
+      <div class="legend">
+        <span class="legend-i"><span class="legend-dot" style="background:#2563eb"></span>Expected</span>
+        <span class="legend-i"><span class="legend-dot" style="background:#16a34a"></span>Recorded</span>
+        <span class="legend-i"><span class="legend-dot" style="background:#dc2626"></span>Missing</span>
+      </div>
+    </div>
+    <canvas id="cr-main" height="160"></canvas>
+  </div>
+  <div class="g2" style="margin-bottom:16px">
+    <div class="panel"><div class="panel-head"><div class="panel-title">Gap % Trend</div><div class="panel-meta">— 15% critical threshold</div></div><canvas id="cr-gap" height="200"></canvas></div>
+    <div class="panel"><div class="panel-head"><div class="panel-title">🌡️ Heatmap Gap</div></div><div id="cr-heatmap" style="overflow-x:auto"></div></div>
+  </div>
+  <div class="sl">Detail Tabel</div>
+  <div class="panel g1">
+    <div class="panel-head"><div class="panel-title">Tabel Gap per Bulan</div></div>
+    <div class="tbl-wrap"><table><thead><tr><th>Bulan</th><th>Komplain Taptalk</th><th>Input CS</th><th>Kelupaan</th><th>Gap %</th><th>Status</th></tr></thead><tbody id="r-tbody"></tbody></table></div>
+  </div>
+</div>
+
+</div><!-- main-inner -->
+</main>
+
+<!-- MODALS -->
+
+<!-- MODAL: EXPORT CSV -->
+<div class="overlay" id="modal-export">
+  <div class="modal" style="max-width:560px">
+    <button class="modal-close" onclick="closeOv('modal-export')">&#x2715;</button>
+    <div class="modal-title">📥 Export Data CSV</div>
+    <div class="modal-sub">Download data sesuai filter yang aktif saat ini.</div>
+
+    <!-- Dataset selector tabs -->
+    <div class="upload-tabs" id="ex-tabs">
+      <button class="utab active" id="ex-tab-tiket" onclick="setExportType('tiket',this)">📋 Tiket</button>
+      <button class="utab" id="ex-tab-komplain" onclick="setExportType('komplain',this)">⚠️ Komplain</button>
+      <button class="utab" id="ex-tab-recon" onclick="setExportType('recon',this)">🔄 Rekonsiliasi</button>
+    </div>
+
+    <!-- Active filters preview -->
+    <div id="ex-filter-info" style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:11px;color:var(--t2);line-height:1.8"></div>
+
+    <!-- Row count badge -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div style="font-size:12px;color:var(--t2)">Jumlah baris yang akan di-export:</div>
+      <div id="ex-row-count" style="font-size:18px;font-weight:800;color:var(--blue);font-family:'JetBrains Mono',monospace">–</div>
+    </div>
+
+    <!-- Column selector -->
+    <div style="margin-bottom:16px">
+      <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px">Pilih Kolom</div>
+
+  <div class="overlay" id="modal-upload">
   <div class="modal">
     <button class="modal-close" onclick="closeOv('modal-upload')">&#x2715;</button>
     <div class="modal-title">⬆ Upload Data Baru</div>
