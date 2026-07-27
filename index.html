@@ -444,11 +444,37 @@ canvas{display:block;width:100%!important;}
 ::-webkit-scrollbar{width:5px;height:5px;}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
-</style>
+
+/* Settings page */
+#page-settings .fg label{font-size:10px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px}
+#page-settings .fg input,#page-settings .fg select{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--rs);font-size:12px;font-family:inherit;background:var(--white)}
+#page-settings .fg input:focus,#page-settings .fg select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-l)}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--t1);cursor:pointer;border-radius:var(--rs);font-size:12px;font-weight:600;font-family:inherit;transition:all .1s}
+.btn-outline:hover{background:var(--bg);border-color:var(--border2)}</style>
 </head>
 <body>
 
 <!-- LOGIN -->
+<!-- PAGE: SETTINGS -->
+<div class="page" id="page-settings">
+  <div class="ph"><div class="ph-icon">⚙️</div><div><div class="ph-title" style="font-size:16px">Pengaturan Akun</div><div class="ph-sub">Kelola user & password — hanya untuk admin</div></div></div>
+  <div style="margin-top:16px">
+    <div style="background:var(--white);border-radius:var(--r);box-shadow:var(--sh);padding:20px">
+      <div style="font-size:13px;font-weight:700;color:var(--t1);margin-bottom:12px">👥 Daftar User</div>
+      <div id="settings-user-list" style="display:flex;flex-direction:column;gap:6px"></div>
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+        <div style="font-size:13px;font-weight:700;color:var(--t1);margin-bottom:10px">➕ Tambah User Baru</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;align-items:end">
+          <div class="fg"><label>Email</label><input id="su-email" placeholder="email@parkee.app"></div>
+          <div class="fg"><label>Password</label><input id="su-pass" type="password" placeholder="Min 6 karakter"></div>
+          <div class="fg"><label>Role</label><select id="su-role"><option value="viewer">👤 Viewer</option><option value="admin">👑 Admin</option></select></div>
+          <button class="btn btn-pri" onclick="addUser()" style="height:38px;white-space:nowrap">Tambah</button>
+        </div>
+        <div id="su-err" style="font-size:11px;color:var(--red);margin-top:6px;display:none"></div>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="login-screen" id="login-screen">
   <!-- LEFT: Photo -->
   <div class="login-photo">
@@ -574,6 +600,9 @@ canvas{display:block;width:100%!important;}
     </button>
     <button class="nav-item" onclick="downloadTemplate('komplain')">
       <span class="nav-icon">⬇</span> Template Komplain
+    </button>
+    <button class="nav-item hidden-admin" onclick="showPage('settings',this)" id="nav-settings" style="margin-top:8px;border-top:1px solid var(--border);padding-top:12px">
+      <span class="nav-icon">⚙️</span> Pengaturan
     </button>
   </nav>
   <div class="sidebar-bottom">
@@ -1016,7 +1045,7 @@ function doLogin(){
   if(!e||!p)return;
   var em=e.value.trim().toLowerCase(),pa=p.value.trim();
   if(!em||!pa){document.getElementById("li-err").textContent="Email dan password wajib diisi";return;}
-  var users=[{email:"nur.arif@parkee.app",password:"ParkeeArif@2024",name:"Nur Arif",role:"admin"},{email:"cs@parkee.app",password:"ParkeeCS@2024",name:"CS Team",role:"viewer"}];
+  var users=getUsers();
   var user=users.find(function(u){return u.email===em&&u.password===pa;});
   if(user){localStorage.setItem("cs_sess",JSON.stringify({email:user.email,name:user.name,role:user.role,ts:Date.now()}));location.reload();}
   else{document.getElementById("li-err").textContent="Email atau password salah";}
@@ -1045,7 +1074,7 @@ function closeMobileSidebar(){
   document.getElementById('sidebar-overlay')?.classList.remove('open');
 }
 function showPage(id,btn){
-  curPage=id;kPage=1;
+  curPage=id;kPage=1;if(id==='settings'){renderSettings();}
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.subbar').forEach(f=>f.classList.add('hidden'));
@@ -1947,7 +1976,7 @@ function doLogin(){
   if(!email||!pass){showLoginErr('Email dan password wajib diisi');return;}
   btn.disabled=true;btn.textContent='Memverifikasi...';
   setTimeout(function(){
-    const user=CS_USERS.find(function(u){return u.email.toLowerCase()===email&&u.password===pass;});
+    var users=getUsers();var users=getUsers();const user=users.find(function(u){return u.email.toLowerCase()===email&&u.password===pass;});
     if(user){currentUser=user;localStorage.setItem('cs_sess',JSON.stringify({email:user.email,name:user.name,role:user.role,ts:Date.now()}));hideLogin();}
     else{showLoginErr('Email atau password salah');btn.disabled=false;btn.textContent='Masuk ke Dashboard';}
   },600);
@@ -1974,6 +2003,7 @@ function hideLogin(){
   document.getElementById('user-role').textContent=role==='admin'?'👑 Admin':'👤 Viewer';
   document.getElementById('user-card').style.display='flex';
   document.getElementById('btn-logout').style.display='flex';
+  document.querySelectorAll('.hidden-admin').forEach(function(el){el.style.display='flex';});
 
   // 4. Wait for DOM paint then init — ensures Chart.js gets correct dimensions
   requestAnimationFrame(function(){
@@ -1993,7 +2023,7 @@ function doLogout(){
 function checkSession(){
   try{
     const s=localStorage.getItem('cs_sess');
-    if(s){const p=JSON.parse(s);if(p.email&&Date.now()-(p.ts||0)<28800000){const user=CS_USERS.find(function(u){return u.email.toLowerCase()===p.email.toLowerCase();});if(user){currentUser=Object.assign({},user,p);return true;}}}
+    if(s){const p=JSON.parse(s);if(p.email&&Date.now()-(p.ts||0)<28800000){var users=getUsers();const user=users.find(function(u){return u.email.toLowerCase()===p.email.toLowerCase();});if(user){currentUser=Object.assign({},user,p);return true;}}}
   }catch(e){}
   localStorage.removeItem('cs_sess');return false;
 }
