@@ -137,12 +137,12 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
 .sub-count{margin-left:auto;font-size:10px;color:var(--t3);font-family:'JetBrains Mono',monospace;white-space:nowrap;flex-shrink:0;padding-left:8px;}
 
 /* ── MAIN CONTENT ── */
-.main{margin-left:220px;padding:calc(var(--nav-h) + var(--sub-h) + 24px) 24px 48px;}
+.main{margin-left:220px;padding:calc(var(--nav-h) + var(--sub-h) + 24px) 24px 48px;overflow:visible;}
 .main-inner{max-width:1280px;margin:0 auto;}
 
 /* ── PAGES ── */
-.page{display:none;padding-bottom:0}.page.active{display:block}.page-content{padding:0 20px 30px}
-.page.active{display:block;animation:pageIn .25s ease;}
+.page{display:none;padding-bottom:0}.page.active{display:block}.page-content{padding:0 20px 40px;min-height:60vh}
+.page.active{display:block;overflow:visible;animation:pageIn .25s ease;}
 @keyframes pageIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
 /* PAGE HEADER */
