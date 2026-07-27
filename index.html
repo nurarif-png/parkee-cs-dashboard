@@ -141,7 +141,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
 .main-inner{max-width:1280px;margin:0 auto;}
 
 /* ── PAGES ── */
-.page{display:none;}
+.page{display:none;padding-bottom:0}.page.active{display:block}.page-content{padding:0 20px 30px}
 .page.active{display:block;animation:pageIn .25s ease;}
 @keyframes pageIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
@@ -458,8 +458,8 @@ canvas{display:block;width:100%!important;}
 <!-- PAGE: SETTINGS -->
 <div class="page" id="page-settings">
   <div class="ph"><div class="ph-icon">⚙️</div><div><div class="ph-title" style="font-size:16px">Pengaturan Akun</div><div class="ph-sub">Kelola user & password — hanya untuk admin</div></div></div>
-  <div style="margin-top:16px">
-    <div style="background:var(--white);border-radius:var(--r);box-shadow:var(--sh);padding:20px">
+  <div class="page-content" style="padding:0 20px 20px">
+    <div style="background:var(--white);border-radius:var(--r);box-shadow:var(--sh);padding:20px;max-width:700px">
       <div style="font-size:13px;font-weight:700;color:var(--t1);margin-bottom:12px">👥 Daftar User</div>
       <div id="settings-user-list" style="display:flex;flex-direction:column;gap:6px"></div>
       <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
@@ -1064,7 +1064,7 @@ let curPage='tiket',charts={},uploadType='tiket',kPage=1;
 const K_PP=20;
 
 // ── NAV ──
-const PAGE_TITLES = {tiket:'📋 Tiket', komplain:'⚠️ Komplain', recon:'🔄 Rekonsiliasi'};
+const PAGE_TITLES = {tiket:'📋 Tiket', komplain:'⚠️ Komplain', recon:'🔄 Rekonsiliasi', settings:'⚙️ Pengaturan'};
 function toggleMobileSidebar(){
   document.getElementById('sidebar')?.classList.toggle('open');
   document.getElementById('sidebar-overlay')?.classList.toggle('open');
