@@ -2015,7 +2015,7 @@ async function sbFetch(path,opts){
   if(res.status===204)return null;return res.json();
 }
 async function sbLoadAll(table,order){
-  const rows=[];let from=0;const SIZE=5000;
+  const rows=[];let from=0;const SIZE=1000;
   const tiketCols='id,year,month,channel,label,agent,produk,note_kategory';
   const komplainCols='id,year,month,location,category,sub_category,product,pic,channel,priority,status,issue';
   const cols=table==='cs_tiket'?tiketCols:komplainCols;
