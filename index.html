@@ -2015,22 +2015,29 @@ async function sbFetch(path,opts){
   if(res.status===204)return null;return res.json();
 }
 async function sbLoadAll(table,order){
-  const rows=[];let from=0;const SIZE=1000;
   const tiketCols='id,year,month,channel,label,agent,produk,note_kategory';
   const komplainCols='id,year,month,location,category,sub_category,product,pic,channel,priority,status,issue';
   const cols=table==='cs_tiket'?tiketCols:komplainCols;
   const colStr=encodeURIComponent(cols);
-  while(true){
-    try{
-      const chunk=await sbFetch(table+'?select='+colStr+'&order='+order+'&offset='+from+'&limit='+SIZE,{headers:{'Range-Unit':'items','Range':from+'-'+(from+SIZE-1)}});
-      if(!chunk||chunk.length===0)break;
-      rows.push.apply(rows,chunk);
-      if(chunk.length<SIZE)break;
-      from+=SIZE;
-    }catch(e){console.warn('sbLoadAll',table,'page',from,':',e.message);break;}
+  const SIZE=1000;
+  // First get total count
+  try{
+    var countRes=await sbFetch(table+'?select=count&limit=1',{});
+    var total=countRes&&countRes[0]?countRes[0].count:0;
+  }catch(e){total=90000;}
+  var pages=Math.ceil(total/SIZE);
+  // Fetch all pages in parallel (batches of 10 to avoid overwhelming browser)
+  var allRows=[];
+  for(var batch=0;batch<pages;batch+=10){
+    var promises=[];
+    for(var p=batch;p<batch+10&&p<pages;p++){
+      var off=p*SIZE;
+      promises.push(sbFetch(table+'?select='+colStr+'&order='+order+'&offset='+off+'&limit='+SIZE,{headers:{'Range-Unit':'items','Range':off+'-'+(off+SIZE-1)}}).catch(function(e){console.warn(table,'page',off,':',e.message);return[];}));
+    }
+    var results=await Promise.all(promises);
+    results.forEach(function(r){if(r&&r.length>0)allRows.push.apply(allRows,r);});
   }
-  setSyncStatus('connected','☁ '+N(D.tiket.rows.length)+' tiket · '+N(rows.length)+' komplain');
-  return rows;
+  return allRows;
 }
 function rebuildTiket(rows){
   // Filter __META__ rows — simpan tanggal upload terakhir, jangan diolah sebagai data
@@ -2080,7 +2087,9 @@ async function loadFromSupabase(){
   try{
     var t=await sbLoadAll('cs_tiket','year%2Cmonth'),k=await sbLoadAll('cs_komplain','year%2Cmonth');
     if(t.length===0&&k.length===0){/* Data embedded, skip Supabase */setSyncStatus('connected','☁ '+N(D.tiket.rows.length)+' tiket');return false;}
-    sbReady=true;setSyncStatus('connected','☁ '+N(t.length)+' tiket · '+N(k.length)+' komplain');
+    if(t.length>0){setSyncStatus('loading','🔄 Mengolah '+N(t.length)+' tiket...');rebuildTiket(t);}
+    if(k.length>0){setSyncStatus('loading','🔄 Mengolah '+N(k.length)+' komplain...');rebuildKomplain(k);}
+    sbReady=true;setSyncStatus('connected','☁ '+N(D.tiket.rows.length)+' tiket · '+N(D.komplain.rows.length)+' komplain');
     return true;
   }catch(e){console.error(e);setSyncStatus('error','📋 Data lokal · '+e.message.slice(0,40));return false;}
 }
