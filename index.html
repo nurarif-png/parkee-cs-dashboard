@@ -2027,7 +2027,7 @@ async function sbLoadAll(table,order){
       rows.push.apply(rows,chunk);
       if(chunk.length<SIZE)break;
       from+=SIZE;
-    }catch(e){console.warn('sbLoadAll',table,'page',from,':',e.message);break;}
+    }catch(e){console.warn('sbLoadAll',table,'page',from,':',e.message);from+=SIZE;continue;}
   }
   setSyncStatus('connected','☁ '+N(D.tiket.rows.length)+' tiket · '+N(rows.length)+' komplain');
   return rows;
@@ -2080,8 +2080,9 @@ async function loadFromSupabase(){
   try{
     var t=await sbLoadAll('cs_tiket','year%2Cmonth'),k=await sbLoadAll('cs_komplain','year%2Cmonth');
     if(t.length===0&&k.length===0){/* Data embedded, skip Supabase */setSyncStatus('connected','☁ '+N(D.tiket.rows.length)+' tiket');return false;}
-    sbReady=true;setSyncStatus('connected','☁ '+N(t.length)+' tiket · '+N(k.length)+' komplain');
-    // Note: Embedded data is used for display. Supabase data only used for CSV import & inline editing.return true;
+    if(t.length>0){setSyncStatus('loading','🔄 Mengolah '+N(t.length)+' tiket...');rebuildTiket(t);}
+    if(k.length>0){setSyncStatus('loading','🔄 Mengolah '+N(k.length)+' komplain...');rebuildKomplain(k);}
+    sbReady=true;setSyncStatus('connected','☁ '+N(D.tiket.rows.length)+' tiket · '+N(D.komplain.rows.length)+' komplain');return true;
   }catch(e){console.error(e);setSyncStatus('error','📋 Data lokal · '+e.message.slice(0,40));return false;}
 }
 async function sbPatchKomplain(d){if(!sbReady)return;setSyncStatus('syncing','Menyimpan...');try{await sbFetch('cs_komplain?id=eq.'+d.id,{method:'PATCH',prefer:'return=minimal',body:JSON.stringify({year:d.year,month:d.month,location:d.location,category:d.category,sub_category:d.subCategory||'',product:d.product,pic:d.pic,priority:d.priority,status:d.status,issue:d.issue||''})});setSyncStatus('saved','✓ Tersimpan');setTimeout(function(){setSyncStatus('connected','☁ Supabase');},2000);}catch(e){setSyncStatus('error',e.message.slice(0,50));}}
