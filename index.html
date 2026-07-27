@@ -2022,7 +2022,7 @@ async function sbLoadAll(table,order){
   const colStr=encodeURIComponent(cols);
   while(true){
     try{
-      const chunk=await sbFetch(table+'?select='+colStr+'&order='+order+'&offset='+from+'&limit='+SIZE,{headers:{'Range-Unit':'items','Range':from+'-'+(from+SIZE-1)}});
+      const chunk=await sbFetch(table+'?select='+colStr+'&year=gte.2025&order='+order+'&offset='+from+'&limit='+SIZE,{headers:{'Range-Unit':'items','Range':from+'-'+(from+SIZE-1)}});
       if(!chunk||chunk.length===0)break;
       rows.push.apply(rows,chunk);
       if(chunk.length<SIZE)break;
