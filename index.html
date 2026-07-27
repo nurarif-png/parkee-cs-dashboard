@@ -2029,6 +2029,72 @@ function checkSession(){
 }
 
 // ════════════════════════════════════
+// ── SETTINGS (admin only) ──
+function getUsers(){
+  try{
+    var stored=JSON.parse(localStorage.getItem('cs_users')||'[]');
+    var merged=CS_USERS.map(function(u){
+      var s=stored.find(function(x){return x.email===u.email;});
+      return s||u;
+    });
+    stored.forEach(function(s){
+      if(!merged.find(function(m){return m.email===s.email;}))merged.push(s);
+    });
+    return merged;
+  }catch(e){return CS_USERS;}
+}
+function saveUsers(users){
+  try{localStorage.setItem('cs_users',JSON.stringify(users));}catch(e){}
+}
+function renderSettings(){
+  if(!currentUser||currentUser.role!=='admin')return;
+  var users=getUsers();
+  var el=document.getElementById('settings-user-list');
+  if(!el)return;
+  el.innerHTML=users.map(function(u,i){return '<div style="display:grid;grid-template-columns:2fr 1fr 1fr 80px 36px;gap:8px;align-items:center;padding:8px 12px;background:var(--bg);border-radius:var(--rs);font-size:12px">'+
+    '<div style="font-weight:600;overflow:hidden;text-overflow:ellipsis">'+u.name+'<br><span style="font-weight:400;color:var(--t2);font-size:11px">'+u.email+'</span></div>'+
+    '<div><input id="sp-'+i+'" type="password" placeholder="****" style="font-size:11px;padding:5px 8px;width:100%;border:1px solid var(--border);border-radius:6px" value="'+u.password+'"></div>'+
+    '<div><select id="sr-'+i+'" style="font-size:11px;padding:5px 8px;width:100%;border:1px solid var(--border);border-radius:6px"><option value="viewer" '+(u.role==='viewer'?'selected':'')+'>Viewer</option><option value="admin" '+(u.role==='admin'?'selected':'')+'>Admin</option></select></div>'+
+    '<button class="btn btn-pri" onclick="updateUser('+i+')" style="padding:5px 10px;font-size:11px">Simpan</button>'+
+    '<button class="btn btn-outline" onclick="deleteUser('+i+')" style="padding:5px 8px;font-size:11px;color:var(--red)" '+(users.length<=1?'disabled':'')+'>✕</button>'+
+    '</div>';}).join('');
+}
+function updateUser(i){
+  var users=getUsers();var u=users[i];
+  if(!u)return;
+  u.password=document.getElementById('sp-'+i).value||u.password;
+  u.role=document.getElementById('sr-'+i).value;
+  saveUsers(users);
+  renderSettings();
+}
+function deleteUser(i){
+  if(!confirm('Hapus user ini?'))return;
+  var users=getUsers();if(users.length<=1)return;
+  users.splice(i,1);
+  saveUsers(users);
+  renderSettings();
+}
+function addUser(){
+  var email=document.getElementById('su-email').value.trim().toLowerCase();
+  var pass=document.getElementById('su-pass').value.trim();
+  var role=document.getElementById('su-role').value;
+  var err=document.getElementById('su-err');
+  if(!email||!pass){err.textContent='Email dan password wajib diisi';err.style.display='block';return;}
+  if(pass.length<6){err.textContent='Password minimal 6 karakter';err.style.display='block';return;}
+  var users=getUsers();
+  if(users.find(function(u){return u.email===email;})){err.textContent='Email sudah terdaftar';err.style.display='block';return;}
+  var name=email.split('@')[0].replace(/[._]/g,' ').replace(/\b\w/g,function(l){return l.toUpperCase();});
+  users.push({email:email,password:pass,name:name,role:role});
+  saveUsers(users);
+  document.getElementById('su-email').value='';document.getElementById('su-pass').value='';
+  err.style.display='none';
+  renderSettings();
+}
+function showSettingsToast(msg){
+  var el=document.getElementById('rt-toast');
+  if(el){el.textContent='🔔 '+msg;el.style.opacity='1';el.style.transform='translateX(-50%) translateY(0)';setTimeout(function(){el.style.opacity='0';el.style.transform='translateX(-50%) translateY(12px)';},4000);}
+}
+
 // SUPABASE
 // ════════════════════════════════════
 const SB_URL='https://jegvufypvzbtrihvqpzu.supabase.co';
