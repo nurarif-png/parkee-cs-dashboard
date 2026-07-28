@@ -2376,7 +2376,7 @@ function showPage(id,btn){
   document.querySelectorAll('.subbar').forEach(f=>f.classList.add('hidden'));
   document.getElementById('page-'+id).classList.add('active');
   if(btn) btn.classList.add('active');
-  document.getElementById('fb-'+id).classList.remove('hidden');
+  var fbEl=document.getElementById('fb-'+id);if(fbEl)fbEl.classList.remove('hidden');
   document.getElementById('topbar-title').textContent = PAGE_TITLES[id] || id;
   closeMobileSidebar();
   applyFilters();
