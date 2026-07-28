@@ -2816,7 +2816,8 @@ function goPage(p){kPage=p;renderKomplainTable();}
 // ── EDIT / DELETE ──
 function openEdit(id){
   if(!currentUser||currentUser.role!=='admin')return;
-  const d=D.komplain.detail.find(x=>x.id===id);if(!d)return;
+  var d=D.komplain.detail.find(function(x){return Number(x.id)===Number(id);});
+  if(!d){console.error('Edit: record not found, id=',id,'type=',typeof id);return;}
   document.getElementById('edit-id').value=id;
   document.getElementById('edit-sub').textContent='ID #'+id+' · '+d.location+' · '+d.monthName+' '+d.year;
   document.getElementById('e-year').value=d.year;
@@ -2835,7 +2836,8 @@ function openEdit(id){
 }
 function saveEdit(){
   const id=+document.getElementById('edit-id').value;
-  const d=D.komplain.detail.find(x=>x.id===id);if(!d)return;
+  var d=D.komplain.detail.find(function(x){return Number(x.id)===Number(id);});
+  if(!d){console.error('SaveEdit: record not found, id=',id);showSettingsToast('Data tidak ditemukan, coba refresh');return;}
   const ny=+document.getElementById('e-year').value,nm=document.getElementById('e-month').value,nmn=MONTHS.indexOf(nm)+1;
   d.year=ny;d.month=nmn;d.monthName=nm;
   d.location=document.getElementById('e-loc').value.trim();
@@ -2859,7 +2861,8 @@ function saveEdit(){
 }
 function openConfirm(id){
   if(!currentUser||currentUser.role!=='admin')return;
-  const d=D.komplain.detail.find(x=>x.id===id);if(!d)return;
+  var d=D.komplain.detail.find(function(x){return Number(x.id)===Number(id);});
+  if(!d){console.error('Delete: record not found, id=',id,'type=',typeof id);return;}
   document.getElementById('confirm-id').value=id;
   document.getElementById('confirm-sub').textContent=d.location+' · '+d.category+' · '+d.monthName+' '+d.year;
   openOv('modal-confirm');
@@ -2867,7 +2870,8 @@ function openConfirm(id){
 function doDelete(){
   const id=+document.getElementById('confirm-id').value;
   sbDeleteKomplain(id);
-  const idx=D.komplain.detail.findIndex(x=>x.id===id);
+  var idx=-1; D.komplain.detail.forEach(function(x,i){if(Number(x.id)===Number(id))idx=i;});
+  if(idx<0){console.error('Delete: record not found, id=',id);return;}
   if(idx>=0){D.komplain.detail.splice(idx,1);D.komplain.rows.splice(idx,1);}
   closeOv('modal-confirm');buildKomplain();
 }
