@@ -323,7 +323,7 @@ tbody td{padding:9px 12px;font-size:12px;color:var(--t1);white-space:nowrap;vert
 @keyframes spin-step{to{transform:rotate(360deg)}}
 .spinning{display:inline-block;animation:spin-step .8s linear infinite;}
 
-.hidden-admin{display:none!important;}
+.hidden-admin{display:none;}
 /* LOGIN */
 /* ═══════════════ LOGIN ═══════════════ */
 .login-screen{
@@ -3300,7 +3300,7 @@ function hideLogin(){
   document.getElementById('user-role').textContent=role==='admin'?'👑 Admin':'👤 Viewer';
   document.getElementById('user-card').style.display='flex';
   document.getElementById('btn-logout').style.display='flex';
-  if(role==='admin'){document.querySelectorAll('.hidden-admin').forEach(function(el){el.style.display='flex';});}
+  document.querySelectorAll('.hidden-admin').forEach(function(el){el.style.display=role==='admin'?'flex':'none';});
 
   // 4. Wait for DOM paint then init — ensures Chart.js gets correct dimensions
   requestAnimationFrame(function(){
