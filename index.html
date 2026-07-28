@@ -2803,7 +2803,7 @@ function renderKomplainTable(){
     <td>${d.product}</td><td>${d.pic||'–'}</td>
     <td style="font-weight:700;font-size:11px;font-family:'JetBrains Mono',monospace;color:${prioClr[d.priority]||'var(--t2)'}">${d.priority}</td>
     <td><span class="pill ${d.status==='Closed'?'pill-green':'pill-blue'}">${d.status}</span></td>
-    <td style="display:flex;gap:5px">${currentUser&&currentUser.role==='admin'?'<button class="act act-edit" onclick="window.dbg&&window.dbg('edit'+'+d.id+')" data-id="'+d.id+'">✏</button><button class="act act-del" onclick="window.dbg&&window.dbg('del'+'+d.id+')" data-id="'+d.id+'">🗑</button>':'-'}</td></tr>`).join('');
+    <td style="display:flex;gap:5px">${currentUser&&currentUser.role==='admin'?'<button class="act act-edit" data-id="'+d.id+'">✏</button><button class="act act-del" data-id="'+d.id+'">🗑</button>':'-'}</td></tr>`).join('');
   let h=`<span class="pg-info">${N((kPage-1)*K_PP+1)}–${N(Math.min(kPage*K_PP,tot))} dari ${N(tot)}</span>`;
   h+=`<button class="pg-btn" ${kPage===1?'disabled':''} onclick="goPage(${kPage-1})">&#x2039;</button>`;
   const s=Math.max(1,kPage-2),e=Math.min(tp,kPage+2);
@@ -3265,12 +3265,6 @@ function populateFilters(){
 }
 
 // ════════════════════════════════════
-// Global debug
-window.dbg = function(msg) {
-  console.log('DBG:', msg);
-  if(msg.startsWith('edit')) openEdit(Number(msg.slice(4)));
-  else if(msg.startsWith('del')) openConfirm(Number(msg.slice(3)));
-};
 // AUTH
 // ════════════════════════════════════
 var currentUser=null;
@@ -3663,11 +3657,9 @@ async function initDashboard(){
   // GLOBAL click handler for edit/delete — level dokumen, paling reliable
   document.addEventListener('click',function(e){
     var btn=e.target.closest('.act-edit,.act-del');
-    console.log('CLICK: target=',e.target.tagName,'className=',e.target.className,'btn=',btn&&btn.className);
     if(!btn||btn.disabled)return;
     e.preventDefault();
     var id=Number(btn.getAttribute('data-id'));
-    console.log('EDIT/DEL click: id=',id);
     if(btn.classList.contains('act-edit'))window.openEdit&&window.openEdit(id);
     else if(btn.classList.contains('act-del'))window.openConfirm&&window.openConfirm(id);
   });
