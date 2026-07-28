@@ -2937,6 +2937,7 @@ document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{
 
 // ── UPLOAD ──
 function openUpload(){
+  if(!currentUser||currentUser.role!=='admin')return;
   document.getElementById('up-status').className='up-status';
   document.getElementById('up-prev').style.display='none';
   document.getElementById('fileInput').value='';
@@ -3298,7 +3299,7 @@ function hideLogin(){
   document.getElementById('user-role').textContent=role==='admin'?'👑 Admin':'👤 Viewer';
   document.getElementById('user-card').style.display='flex';
   document.getElementById('btn-logout').style.display='flex';
-  document.querySelectorAll('.hidden-admin').forEach(function(el){el.style.display='flex';});
+  if(role==='admin'){document.querySelectorAll('.hidden-admin').forEach(function(el){el.style.display='flex';});}
 
   // 4. Wait for DOM paint then init — ensures Chart.js gets correct dimensions
   requestAnimationFrame(function(){
