@@ -1547,11 +1547,23 @@ function buildKomplainYoY(filteredRows){
       monthly_data[k]=(monthly_data[k]||0)+1;
     });
   } else {
-    monthly_data=EXTRA.komplain_monthly;
+    // Pakai data LIVE dari Supabase (bukan EXTRA hardcoded) biar bulan baru ikut sync
+    monthly_data={};
+    allRows.forEach(function(r){
+      var k=r[0]+'-'+String(r[1]).padStart(2,'0');
+      monthly_data[k]=(monthly_data[k]||0)+1;
+    });
   }
   buildYoYChart('ck-yoy','yoy-legend',monthly_data);
 }
-function buildTiketYoY(){buildYoYChart('ct-yoy','tiket-yoy-legend',EXTRA.tiket_monthly);}
+function buildTiketYoY(){
+  var monthly_data={};
+  D.tiket.rows.forEach(function(r){
+    var k=r[0]+'-'+String(r[1]).padStart(2,'0');
+    monthly_data[k]=(monthly_data[k]||0)+1;
+  });
+  buildYoYChart('ct-yoy','tiket-yoy-legend',monthly_data);
+}
 
 // ── KOMPLAIN TABLE ──
 function getFD(){
