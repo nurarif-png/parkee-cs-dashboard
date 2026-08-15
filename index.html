@@ -2466,6 +2466,26 @@ function startRealtime(){
     rtWS.onclose=function(){rtWS=null;setTimeout(startRealtime,5000);};
   }catch(e){}
 }
+// Helper: sync "Data per ..." dari meta row terbaru saat realtime (tanpa reload)
+function refreshMetaLatest(type){
+  var ds=EXTRA.date_stats&&EXTRA.date_stats[type];if(!ds)return;
+  var mv=(type==='tiket')?D.tiket._metaVal:D.komplain._metaVal;
+  var rows=(type==='tiket')?D.tiket.rows:(D.komplain.detail.length?D.komplain.detail:null);
+  if(!mv||!rows||!rows.length){updateLastUpdateInfo();return;}
+  var maxR=rows.reduce(function(a,r){
+    var y=(type==='tiket')?r[0]:r.year,m=(type==='tiket')?r[1]:r.month;
+    return(y>a[0]||(y===a[0]&&m>a[1]))?[y,m]:a;
+  },[0,0]);
+  var dataMonth=maxR[0]*100+maxR[1];
+  var metaMonth=Math.floor(mv/100);
+  if(metaMonth>=dataMonth){
+    var dd=String(mv%100).padStart(2,'0');
+    var mm2=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][Math.floor(mv/100%100)-1];
+    var yyyy=Math.floor(mv/10000);
+    ds.latest=dd+' '+mm2+' '+yyyy;
+  }
+  updateLastUpdateInfo();
+}
 function handleRT(topic,type,data){
   var MN=['January','February','March','April','May','June','July','August','September','October','November','December'];
   var toast=document.getElementById('rt-toast');
@@ -2473,6 +2493,11 @@ function handleRT(topic,type,data){
   if(topic.includes('cs_komplain')){
     if(type==='INSERT'&&data.record){
       var r=data.record;
+      if(r.channel==='__META__'){
+        var mk=(r.issue||r.label||'').match(/^LU:(\d{4})(\d{2})(\d{2})$/);
+        if(mk){var nvk=parseInt(mk[1])*10000+parseInt(mk[2])*100+parseInt(mk[3]);if(!D.komplain._metaVal||nvk>D.komplain._metaVal)D.komplain._metaVal=nvk;}
+        refreshMetaLatest('komplain');return;
+      }
       var rPic=normPic(r.pic||'Unknown');
       D.komplain.detail.push({id:r.id,year:r.year,month:r.month,monthName:MN[r.month-1],location:r.location||'',channel:r.channel||'',category:r.category||'',subCategory:r.sub_category||'',product:r.product||'',pic:rPic,priority:r.priority||'',status:r.status||'Open',issue:r.issue||''});
       var cats=D.komplain.categories,prods=D.komplain.products,pics=D.komplain.pics,chs=D.komplain.channels,prios=D.komplain.priorities,locs=D.komplain.locations;
@@ -2490,7 +2515,7 @@ function handleRT(topic,type,data){
     document.getElementById('nc-komplain').textContent=N(D.komplain.detail.length);
     if(curPage==='komplain'){populateFilters();buildKomplain();}else if(curPage==='recon')buildRecon();
   }else if(topic.includes('cs_tiket')){
-    if(type==='INSERT'&&data.record){var r=data.record;if(r.label==='Misroute')r.label='Spam';var chs=D.tiket.channels,lbs=D.tiket.labels,ags=D.tiket.agents,prs=D.tiket.produks||(D.tiket.produks=[]),nks=D.tiket.note_kategoris||(D.tiket.note_kategoris=[]);var ci=chs.indexOf(r.channel);if(ci<0){chs.push(r.channel);ci=chs.length-1;}var li=lbs.indexOf(r.label);if(li<0){lbs.push(r.label);li=lbs.length-1;}var ai=ags.indexOf(r.agent);if(ai<0){ags.push(r.agent);ai=ags.length-1;}var pi=prs.indexOf(r.produk||'Unlabeled');if(pi<0){prs.push(r.produk||'Unlabeled');pi=prs.length-1;}var ni=nks.indexOf(r.note_kategory||'Unlabeled');if(ni<0){nks.push(r.note_kategory||'Unlabeled');ni=nks.length-1;}D.tiket.rows.push([r.year,r.month,ci,li,ai,pi,ni]);updateExtraMonthly('tiket',[{year:r.year,month:r.month}]);}
+    if(type==='INSERT'&&data.record){var r=data.record;if(r.channel==='__META__'){var mt=(r.label||'').match(/^LU:(\d{4})(\d{2})(\d{2})$/);if(mt){var nvt=parseInt(mt[1])*10000+parseInt(mt[2])*100+parseInt(mt[3]);if(!D.tiket._metaVal||nvt>D.tiket._metaVal)D.tiket._metaVal=nvt;}refreshMetaLatest('tiket');return;}if(r.label==='Misroute')r.label='Spam';var chs=D.tiket.channels,lbs=D.tiket.labels,ags=D.tiket.agents,prs=D.tiket.produks||(D.tiket.produks=[]),nks=D.tiket.note_kategoris||(D.tiket.note_kategoris=[]);var ci=chs.indexOf(r.channel);if(ci<0){chs.push(r.channel);ci=chs.length-1;}var li=lbs.indexOf(r.label);if(li<0){lbs.push(r.label);li=lbs.length-1;}var ai=ags.indexOf(r.agent);if(ai<0){ags.push(r.agent);ai=ags.length-1;}var pi=prs.indexOf(r.produk||'Unlabeled');if(pi<0){prs.push(r.produk||'Unlabeled');pi=prs.length-1;}var ni=nks.indexOf(r.note_kategory||'Unlabeled');if(ni<0){nks.push(r.note_kategory||'Unlabeled');ni=nks.length-1;}D.tiket.rows.push([r.year,r.month,ci,li,ai,pi,ni]);updateExtraMonthly('tiket',[{year:r.year,month:r.month}]);}
     document.getElementById('nc-tiket').textContent=N(D.tiket.rows.length);
     if(curPage==='tiket'){populateFilters();buildTiket();}
   }else if(topic.includes('cs_users')){
