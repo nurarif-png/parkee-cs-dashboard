@@ -597,6 +597,10 @@ canvas{display:block;width:100%!important;}
       <span class="nav-icon">🔄</span> Rekonsiliasi
       <span class="nav-ct" style="background:var(--amber-l);color:var(--amber)">GAP</span>
     </button>
+    <button class="nav-item" onclick="showPage('broadcast',this)" id="nav-broadcast">
+      <span class="nav-icon">📣</span> Broadcast Cost
+      <span class="nav-ct" id="nc-broadcast">–</span>
+    </button>
     <div class="nav-section-label">Tools</div>
     <button class="nav-item" onclick="openUpload()">
       <span class="nav-icon">⬆</span> Upload CSV
@@ -660,6 +664,24 @@ canvas{display:block;width:100%!important;}
   </div>
   <button class="btn-reset" onclick="resetFilters('tiket')">✕ Reset</button>
   <span class="sub-count" id="fc-tiket"></span>
+</div>
+
+<!-- FILTER: BROADCAST COST -->
+<div class="subbar hidden" id="fb-broadcast">
+  <button class="sub-label-btn" onclick="toggleFilterExtra('fb-extra')">Filter <span id="fb-extra-arrow">▾</span></button>
+  <div class="date-range-group">
+    <span style="font-size:10px;color:var(--t3);font-weight:600;margin-right:2px">DARI</span>
+    <input class="date-inp" type="date" id="fb-date-from" onchange="applyFilters()" value="2026-01-01">
+    <span class="date-range-sep">→</span>
+    <input class="date-inp" type="date" id="fb-date-to" onchange="applyFilters()">
+  </div>
+  <div class="filter-extra" id="fb-extra">
+  <div class="fdiv"></div>
+  <select class="fsel" id="fb-agent" onchange="applyFilters()"><option value="">Semua Agent</option></select>
+  <select class="fsel" id="fb-produk" onchange="applyFilters()"><option value="">Semua Produk</option></select>
+  </div>
+  <button class="btn-reset" onclick="resetFilters('broadcast')">✕ Reset</button>
+  <span class="sub-count" id="fc-broadcast"></span>
 </div>
 
 <!-- FILTER: KOMPLAIN -->
@@ -749,19 +771,6 @@ canvas{display:block;width:100%!important;}
     <div class="panel span2"><div class="panel-head"><div class="panel-title">Breakdown Case Label</div></div><canvas id="ct-label" height="145"></canvas></div>
     <div class="panel"><div class="panel-head"><div class="panel-title">Channel Masuk</div></div><div id="ct-channel"></div></div>
   </div>
-  <div class="sl">BC (Broadcast) &amp; Estimasi Cost</div>
-  <div class="g4">
-    <div class="kpi" style="--kc:var(--blue);--ki:var(--blue-l)"><div class="kpi-accent"></div><div class="kpi-icon">📣</div><div class="kpi-label">Tiket BC</div><div class="kpi-val" id="bc-count">–</div><div class="kpi-sub">Berlabel "BC" (broadcast)</div></div>
-    <div class="kpi" style="--kc:var(--amber);--ki:var(--amber-l)"><div class="kpi-accent"></div><div class="kpi-icon">💰</div><div class="kpi-label">Estimasi Cost BC</div><div class="kpi-val" id="bc-cost">–</div><div class="kpi-sub">Tiket BC × Rp 372</div></div>
-    <div class="kpi" style="--kc:var(--teal);--ki:var(--teal-l)"><div class="kpi-accent"></div><div class="kpi-icon">🏷️</div><div class="kpi-label">Rate per Pesan</div><div class="kpi-val">Rp 372</div><div class="kpi-sub">Rate BC sejak 2025</div></div>
-    <div class="kpi" style="--kc:var(--green);--ki:var(--green-l)"><div class="kpi-accent"></div><div class="kpi-icon">📉</div><div class="kpi-label">Cost Periode Sebelumnya</div><div class="kpi-val" id="bc-prev">–</div><div class="kpi-trend" id="bc-cost-trend"></div><div class="kpi-sub">Pembanding hemat / boros</div></div>
-  </div>
-  <div class="g2">
-    <div class="panel"><div class="panel-head"><div class="panel-title">Tiket BC per Bulan</div><div style="font-size:11px;color:var(--t3)">Hover = estimasi cost</div></div><canvas id="ct-bc-month" height="185"></canvas></div>
-    <div class="panel"><div class="panel-head"><div class="panel-title">💰 Estimasi Cost per Bulan</div><div style="font-size:11px;color:var(--t3)">Tiket × Rp 372</div></div><div id="bc-cost-month"></div></div>
-  </div>
-  <div class="panel g1"><div class="panel-head"><div class="panel-title">Estimasi Cost per Agent</div><div style="font-size:11px;color:var(--t3)">Jumlah tiket · cost</div></div><div id="bc-cost-agent"></div></div>
-  <div style="font-size:11px;color:var(--t3);margin:-4px 0 18px 2px;line-height:1.55">📌 <b>Catatan:</b> angka ini <b>estimasi</b> — dihitung dari <b>jumlah tiket berlabel BC</b> × <b>Rp 372</b> (rate BC 2025), bukan jumlah pesan broadcast yang benar-benar terkirim. Angka mengikuti filter tanggal / channel / agent / produk yang aktif (filter label diabaikan).</div>
   <div class="sl">Agent Performance</div>
   <div class="panel g1"><div class="panel-head"><div class="panel-title">Volume Tiket per Agent</div></div><div id="ct-agent"></div></div>
   <div class="sl">Top Produk</div>
@@ -781,6 +790,29 @@ canvas{display:block;width:100%!important;}
     </div>
     <div id="ct-note-kategory"></div>
   </div>
+</div>
+
+<!-- PAGE: BROADCAST COST -->
+<div class="page" id="page-broadcast">
+  <div class="ph">
+    <div><div class="ph-title">📣 Broadcast Cost — Estimasi Biaya BC</div><div class="ph-sub">Volume tiket berlabel BC beserta estimasi biaya pesan broadcast</div></div>
+    <span class="badge badge-blue">BC × Rp 372</span>
+  </div>
+  <div class="sl">Key Performance Indicators</div>
+  <div class="g4">
+    <div class="kpi" style="--kc:var(--blue);--ki:var(--blue-l)"><div class="kpi-accent"></div><div class="kpi-icon">📣</div><div class="kpi-label">Tiket BC</div><div class="kpi-val" id="bc-count">–</div><div class="kpi-sub">Berlabel "BC" (broadcast)</div></div>
+    <div class="kpi" style="--kc:var(--amber);--ki:var(--amber-l)"><div class="kpi-accent"></div><div class="kpi-icon">💰</div><div class="kpi-label">Estimasi Cost BC</div><div class="kpi-val" id="bc-cost">–</div><div class="kpi-sub">Tiket BC × Rp 372</div></div>
+    <div class="kpi" style="--kc:var(--teal);--ki:var(--teal-l)"><div class="kpi-accent"></div><div class="kpi-icon">🏷️</div><div class="kpi-label">Rate per Pesan</div><div class="kpi-val">Rp 372</div><div class="kpi-sub">Rate BC sejak 2025</div></div>
+    <div class="kpi" style="--kc:var(--green);--ki:var(--green-l)"><div class="kpi-accent"></div><div class="kpi-icon">📉</div><div class="kpi-label">Cost Periode Sebelumnya</div><div class="kpi-val" id="bc-prev">–</div><div class="kpi-trend" id="bc-cost-trend"></div><div class="kpi-sub">Pembanding hemat / boros</div></div>
+  </div>
+  <div class="sl">Tren &amp; Cost per Bulan</div>
+  <div class="g2">
+    <div class="panel"><div class="panel-head"><div class="panel-title">Tiket BC per Bulan</div><div style="font-size:11px;color:var(--t3)">Hover = estimasi cost</div></div><canvas id="ct-bc-month" height="185"></canvas></div>
+    <div class="panel"><div class="panel-head"><div class="panel-title">💰 Estimasi Cost per Bulan</div><div style="font-size:11px;color:var(--t3)">Tiket × Rp 372</div></div><div id="bc-cost-month"></div></div>
+  </div>
+  <div class="sl">Breakdown Agent</div>
+  <div class="panel g1"><div class="panel-head"><div class="panel-title">Estimasi Cost per Agent</div><div style="font-size:11px;color:var(--t3)">Jumlah tiket · cost</div></div><div id="bc-cost-agent"></div></div>
+  <div style="font-size:11px;color:var(--t3);margin:-4px 0 18px 2px;line-height:1.55">📌 <b>Catatan:</b> angka ini <b>estimasi</b> — dihitung dari <b>jumlah tiket berlabel BC</b> × <b>Rp 372</b> (rate BC 2025), bukan jumlah pesan broadcast yang benar-benar terkirim. Angka mengikuti filter tanggal / agent / produk yang aktif.</div>
 </div>
 
 <!-- PAGE: KOMPLAIN -->
@@ -1162,7 +1194,7 @@ let curPage='tiket',charts={},uploadType='tiket',kPage=1;
 const K_PP=20;
 
 // ── NAV ──
-const PAGE_TITLES = {tiket:'📋 Tiket', komplain:'⚠️ Komplain', recon:'🔄 Rekonsiliasi', settings:'⚙️ Pengaturan'};
+const PAGE_TITLES = {tiket:'📋 Tiket', komplain:'⚠️ Komplain', recon:'🔄 Rekonsiliasi', broadcast:'📣 Broadcast Cost', settings:'⚙️ Pengaturan'};
 function toggleMobileSidebar(){
   document.getElementById('sidebar')?.classList.toggle('open');
   document.getElementById('sidebar-overlay')?.classList.toggle('open');
@@ -1289,12 +1321,13 @@ function getFK(){
   }
   return filtered;
 }
-function applyFilters(){if(curPage==='tiket')buildTiket();else if(curPage==='komplain')buildKomplain();else buildRecon();}
+function applyFilters(){if(curPage==='tiket')buildTiket();else if(curPage==='komplain')buildKomplain();else if(curPage==='broadcast')buildBCCost();else buildRecon();}
 function resetFilters(p){
   // Reset selects
   const selIds={
     tiket:['ft-channel','ft-label','ft-agent','ft-produk'],
     komplain:['fk-cat','fk-subcat','fk-prod','fk-loc','fk-pic'],
+    broadcast:['fb-agent','fb-produk'],
     recon:['fr-status']
   };
   (selIds[p]||[]).forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
@@ -1302,6 +1335,7 @@ function resetFilters(p){
   const defaults={
     tiket:  {from:'ft-date-from',to:'ft-date-to',  dfrom:'2024-01-01',dto:''},
     komplain:{from:'fk-date-from',to:'fk-date-to', dfrom:'2024-01-01',dto:''},
+    broadcast:{from:'fb-date-from',to:'fb-date-to', dfrom:'2026-01-01',dto:''},
     recon:  {from:'fr-date-from',to:'fr-date-to',  dfrom:'2024-01-01',dto:''}
   };
   const d=defaults[p];
@@ -1462,34 +1496,44 @@ function buildTiket(){
       nkSection.style.display='none';
     }
   }catch(e){}
-  buildBCCost();
+  updateBroadcastNav();
   buildTiketYoY();
 }
 
-// ── BC (BROADCAST) & ESTIMASI COST ──
+// ── MENU: BROADCAST COST ──
 const BC_RATE=372; // Rp per pesan BC (rate 2025 dari NOOR)
 function fmtRp(n){return 'Rp '+Math.round(n).toLocaleString('id-ID');}
+function updateBroadcastNav(){
+  const el=document.getElementById('nc-broadcast');if(!el)return;
+  const bci=D.tiket.labels.indexOf('BC');
+  if(bci<0){el.textContent='0';return;}
+  let n=0;for(var i=0;i<D.tiket.rows.length;i++){if(D.tiket.rows[i][3]===bci)n++;}
+  el.textContent=N(n);
+}
 function bcRowsNoLabel(){
-  const r=D.tiket.rows,ch=D.tiket.channels,lb=D.tiket.labels,ag=D.tiket.agents,pr=D.tiket.produks||[];
+  const r=D.tiket.rows,lb=D.tiket.labels,ag=D.tiket.agents,pr=D.tiket.produks||[];
   const bci=lb.indexOf('BC');
-  const cv=document.getElementById('ft-channel').value;const ci=cv?ch.indexOf(cv):-1;
-  const av=document.getElementById('ft-agent').value;const ai=av?ag.indexOf(av):-1;
-  const pv=document.getElementById('ft-produk')?.value||'';const pi=pv?pr.indexOf(pv):-1;
+  const av=document.getElementById('fb-agent')?.value||'';const ai=av?ag.indexOf(av):-1;
+  const pv=document.getElementById('fb-produk')?.value||'';const pi=pv?pr.indexOf(pv):-1;
   return r.filter(function(row){
     if(row[3]!==bci)return false;
-    if(ci>=0&&row[2]!==ci)return false;
     if(ai>=0&&row[4]!==ai)return false;
     if(pi>=0&&(row.length<6||row[5]!==pi))return false;
     return true;
   });
 }
 function bcDateWindow(){
-  const fromVal=document.getElementById('ft-date-from')?.value||'';
-  const toVal=document.getElementById('ft-date-to')?.value||'';
-  return{
-    fromYM:fromVal?(+fromVal.slice(0,4))*100+(+fromVal.slice(5,7)):null,
-    toYM:toVal?(+toVal.slice(0,4))*100+(+toVal.slice(5,7)):null
-  };
+  const fromVal=document.getElementById('fb-date-from')?.value||'';
+  const toVal=document.getElementById('fb-date-to')?.value||'';
+  let fromYM=fromVal?(+fromVal.slice(0,4))*100+(+fromVal.slice(5,7)):null;
+  let toYM=toVal?(+toVal.slice(0,4))*100+(+toVal.slice(5,7)):null;
+  // Kalau tanggal akhir kosong, pakai bulan data terakhir -> pembanding periode tetap bisa dihitung
+  if(toYM===null){
+    let mx=0;
+    for(var i=0;i<D.tiket.rows.length;i++){var v=D.tiket.rows[i][0]*100+D.tiket.rows[i][1];if(v>mx)mx=v;}
+    if(mx>0)toYM=mx;
+  }
+  return{fromYM:fromYM,toYM:toYM};
 }
 function getBCRows(){
   const w=bcDateWindow();
@@ -1518,6 +1562,8 @@ function buildBCCost(){
   const rows=getBCRows(),n=rows.length,cost=n*BC_RATE;
   cEl.textContent=N(n);
   document.getElementById('bc-cost').textContent=fmtRp(cost);
+  const fEl=document.getElementById('fc-broadcast');
+  if(fEl)fEl.textContent=N(n)+' tiket BC · '+fmtRp(cost)+' · rate Rp 372/pesan';
   // Perbandingan dengan periode sebelumnya (turun = hemat)
   try{
     const prev=getBCPrevRows();
@@ -2164,6 +2210,10 @@ function populateFilters(){
   document.getElementById('ft-label').innerHTML='<option value="">Semua Label</option>'+D.tiket.labels.filter(l=>l&&l!=='Unknown').map(l=>`<option>${l}</option>`).join('');
   document.getElementById('ft-agent').innerHTML='<option value="">Semua Agent</option>'+D.tiket.agents.filter(a=>a&&a!=='Unknown'&&a!=='Solved by Bot').map(a=>`<option>${a}</option>`).join('');
   if(document.getElementById('ft-produk'))document.getElementById('ft-produk').innerHTML='<option value="">Semua Produk</option>'+D.tiket.produks.filter(p=>p&&p!=='Unknown').map(p=>`<option>${p}</option>`).join('');
+  const fbAg=document.getElementById('fb-agent');
+  if(fbAg){const prev=fbAg.value;fbAg.innerHTML='<option value="">Semua Agent</option>'+D.tiket.agents.filter(a=>a&&a!=='Unknown'&&a!=='Solved by Bot').map(a=>`<option>${a}</option>`).join('');if(prev)fbAg.value=prev;}
+  const fbPr=document.getElementById('fb-produk');
+  if(fbPr){const prev=fbPr.value;fbPr.innerHTML='<option value="">Semua Produk</option>'+D.tiket.produks.filter(p=>p&&p!=='Unknown').map(p=>`<option>${p}</option>`).join('');if(prev)fbPr.value=prev;}
   document.getElementById('fk-cat').innerHTML='<option value="">Semua Kategori</option>'+D.komplain.categories.filter(c=>c&&c!=='Unknown').map(c=>`<option>${c}</option>`).join('');
   // Build unique sub categories from detail
   const allSubcats=[...new Set(D.komplain.detail.map(d=>d.subCategory).filter(s=>s&&s!=='Unknown'&&s!==''))].sort();
@@ -2185,11 +2235,11 @@ function populateFilters(){
 // ════════════════════════════════════
 var currentUser=null;
 const CS_USERS=[
-  {email:'nur.arif@parkee.app',password:'ParkeeArif@2024',name:'Nur Arif',role:'admin',access:['tiket','komplain','recon']},
-  {email:'cs@parkee.app',password:'ParkeeCS@2024',name:'CS Team',role:'viewer',access:['tiket','komplain','recon']},
+  {email:'nur.arif@parkee.app',password:'ParkeeArif@2024',name:'Nur Arif',role:'admin',access:['tiket','komplain','recon','broadcast']},
+  {email:'cs@parkee.app',password:'ParkeeCS@2024',name:'CS Team',role:'viewer',access:['tiket','komplain','recon','broadcast']},
 ];
-const ALL_PAGES=['tiket','komplain','recon'];
-const PAGE_LABELS={tiket:'Tiket',komplain:'Komplain',recon:'Rekonsiliasi'};
+const ALL_PAGES=['tiket','komplain','recon','broadcast'];
+const PAGE_LABELS={tiket:'Tiket',komplain:'Komplain',recon:'Rekonsiliasi',broadcast:'Broadcast Cost'};
 function hasAccess(page){
   if(!currentUser)return false;
   if(currentUser.role==='admin')return true;
